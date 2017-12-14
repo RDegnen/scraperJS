@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const logger = require('morgan');
@@ -29,9 +30,9 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // send error response
   res.status(err.status || 500);
-  res.render('error');
+  res.json(err);
 });
 
 app.listen(3000, () => console.log('App listening on port 3000!'))

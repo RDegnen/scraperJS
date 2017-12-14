@@ -1,14 +1,18 @@
 const Listing = require('../models/listing');
 
-const allListings = (req, res) => {
-  res.send('Not implemented');
+const index = (req, res, next) => {
+  Listing.getAllListings()
+    .then(listings => res.json(listings))
+    .catch(err => next(err));
 };
 
-const providerListings = (req, res) => {
-  res.send('Not implemented: Provider ' + req.params);
+const show = (req, res, next) => {
+  Listing.getListing(req)
+    .then(listing => res.json(listing))
+    .catch(err => next(err));
 };
 
 module.exports = {
-  allListings,
-  providerListings,
+  index,
+  show,
 };

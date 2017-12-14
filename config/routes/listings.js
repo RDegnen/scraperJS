@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const listingsController = require('../../app/controllers/listingsController');
 
-router.get('/', listingsController.allListings);
+router.get('/', listingsController.index);
+router.get('/:id', listingsController.show);
 
 module.exports = router;
