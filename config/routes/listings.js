@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const listingsController = require('../../app/controllers/listingsController')
+const listingsController = require('../../app/controllers/listingsController');
 
-router.get('/', listingsController.all_listings);
+router.get('/', listingsController.allListings);
 
 module.exports = router;
