@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const index = require('./config/routes/index');
 const scrape = require('./config/routes/scrape');
+const listings = require('./config/routes/listings');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 app.use('/', index);
 app.use('/scrape', scrape);
+app.use('/listings', listings);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
