@@ -17,12 +17,14 @@ const getAllListings = () => {
 const getListing = (req) => {
   return new Promise((resolve, reject) => {
     const params = {
-      TableName: table,
       Key: {
-        listing_name: req.id,
+        listing_name: {
+          S: req.params.id,
+        },
       },
+      TableName: table,
     };
-    dynamodb.scan(params, (err, data) => {
+    dynamodb.getItem(params, (err, data) => {
       if (err) reject(err);
       resolve(data);
     });
