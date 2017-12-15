@@ -7,18 +7,13 @@ const collectHtml = (req) => {
   return new Promise((resolve, reject) => {
     switch (req.body.source) {
       case 'craigslist': {
-        const boards = ['internet-engineering/search/eng', 'software-qa-dba-etc/search/sof',
-                        'web-html-info-design/search/web'];
-        const results = [];
+        const rp1 = rp('https://boston.craigslist.org/d/internet-engineering/search/eng')
+        const rp2 = rp('https://boston.craigslist.org/d/software-qa-dba-etc/search/sof')
+        const rp3 = rp('https://boston.craigslist.org/d/web-html-info-design/search/web')
 
-        for (let i = 0; i < boards.length; i++) {
-          const url = `https://boston.craigslist.org/d/${boards[i]}`;
-          const pageId = `${req.params.source}-${boards[i].split('/')[0]}`
-          rp(url).then((html) => {
-            results.push({ html, pageId });
-          }).catch(err => reject(err));
-        }
-        resolve(results)
+        Promise.all([rp1, rp2, rp3])
+          .then(results => resolve(results))
+          .catch(err => reject(err))
         break;
       }
       default: {
