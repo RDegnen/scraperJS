@@ -16,6 +16,24 @@ const collectHtml = (req) => {
           .catch(err => reject(err));
         break;
       }
+      case 'indeed': {
+        // Add + between terms for indeed search. Then loop over terms and within that loop
+        // over pages so there is the specified amount of pages for each term.
+        const urls = [];
+        const terms = req.body.terms.map(t => t.split(' ').join('+'));
+        for (let i = 0; i < terms.length; i++) {
+          for (let p = 0; p < req.body.pages; p++) {
+            let url;
+            if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=Boston%2C+MA&`;
+            else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=Boston%2C+MA&start=${p * 10}`;
+            urls.push(rp(url));
+          }
+        }
+        Promise.all(urls)
+          .then(results => resolve(results))
+          .catch(err => reject(err));
+        break;
+      }
       default: {
         break;
       }
@@ -28,7 +46,7 @@ const writePageToDynamo = (results, sourceData) => {
     // Create array of PutRequest params to send to batchWriteItem
     const paramsArray = [];
     for (let i = 0; i < results.length; i++) {
-      const randomInt = Math.random() * (1 - 1000) + 1;
+      const randomInt = Math.floor(Math.random() * (1 - 1000) + 1);
       const params = {
         PutRequest: {
           Item: {
@@ -39,7 +57,7 @@ const writePageToDynamo = (results, sourceData) => {
               S: sourceData,
             },
             pageId: {
-              S: `${sourceData}-${randomInt}`,
+              S: `${sourceData}${randomInt}`,
             },
           },
         },
