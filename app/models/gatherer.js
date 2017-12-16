@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const rp = require('request-promise')
+const rp = require('request-promise');
 const dynamodb = new AWS.DynamoDB();
 const table = 'scraped_pages';
 
@@ -41,7 +41,7 @@ const collectHtml = (req) => {
   });
 };
 
-const writePageToDynamo = (results, sourceData) => {
+const writePageToDynamo = (results, reqBody) => {
   return new Promise((resolve, reject) => {
     // Create array of PutRequest params to send to batchWriteItem
     const paramsArray = [];
@@ -54,10 +54,10 @@ const writePageToDynamo = (results, sourceData) => {
               S: results[i],
             },
             source: {
-              S: sourceData,
+              S: reqBody.source,
             },
             pageId: {
-              S: `${sourceData}${randomInt}`,
+              S: `${reqBody.source}${randomInt}`,
             },
           },
         },
