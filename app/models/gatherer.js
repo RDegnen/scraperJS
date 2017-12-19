@@ -1,7 +1,6 @@
 const AWS = require('aws-sdk');
 const rp = require('request-promise');
 const dynamodb = new AWS.DynamoDB();
-const table = 'scraped_pages';
 
 const collectHtml = (req) => {
   return new Promise((resolve, reject) => {

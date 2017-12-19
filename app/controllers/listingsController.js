@@ -1,4 +1,5 @@
 const Listing = require('../models/listing');
+const Scraper = require('../models/scraper')
 
 const index = (req, res, next) => {
   Listing.getAllListings()
@@ -12,7 +13,15 @@ const show = (req, res, next) => {
     .catch(err => next(err));
 };
 
+const create = (req, res, next) => {
+  Scraper.getHtml()
+    .then(data => Scraper.scrapeCraigslist(data))
+    .then(resp => res.json(resp))
+    .catch(err => next(err));
+};
+
 module.exports = {
   index,
   show,
+  create,
 };
