@@ -15,7 +15,17 @@ const show = (req, res, next) => {
 
 const create = (req, res, next) => {
   Scraper.getHtml()
-    .then(data => Scraper.scrapeCraigslist(data))
+    .then((data) => {
+      if (req.params.source === 'craigslist') {
+        return Scraper.scrapeCraigslist(data);
+      } else if (req.params.source === 'indeed') {
+        return Scraper.scrapeIndeed(data);
+      } else if (req.params.source === 'all') {
+        const craigslistListings = Scraper.scrapeCraigslist(data);
+        const indeedListings = Scraper.scrapeIndeed(data);
+        return [].concat.apply([], [craigslistListings, indeedListings]);
+      }
+    })
     .then(data => Scraper.writeListings(data))
     .then(resp => res.json(resp))
     .catch(err => next(err));

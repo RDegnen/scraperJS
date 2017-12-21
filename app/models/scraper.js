@@ -20,7 +20,7 @@ const scrapeCraigslist = (data) => {
     const items = data.Items;
     const listings = [];
     for (let i = 0; i < items.length; i++) {
-      const $ = cheerio.load(items[0].html.S);
+      const $ = cheerio.load(items[i].html.S);
       $('.result-row').each((j, elem) => {
         const href = $(elem).find('a').attr('href');
         const dataId = href.split('/');
@@ -50,6 +50,41 @@ const scrapeCraigslist = (data) => {
   });
 };
 
+const scrapeIndeed = (data) => {
+  return new Promise((resolve, reject) => {
+    const items = data.Items;
+    const listings = [];
+    for (let i = 0; i < items.length; i++) {
+      const $ = cheerio.load(items[i].html.S);
+      $('.jobtitle').each((j, elem) => {
+        const href = $(elem).find('a').attr('href');
+        // Put listing in Dynamo format
+        const listing = {
+          PutRequest: {
+            Item: {
+              job_title: {
+                S: $(elem).find('a').attr('title'),
+              },
+              link: {
+                S: `https://www.indeed.com/${href}`,
+              },
+              listing_name: {
+                S: $(elem).attr('id'),
+              },
+              source: {
+                S: 'indeed',
+              },
+            },
+          },
+        };
+        if (href === undefined) console.log('skipping...')
+        listings.push(listing);
+      });
+    }
+    resolve(listings);
+  });
+};
+
 const writeListings = (listings) => {
   return new Promise((resolve, reject) => {
     // Splice the listings array otherwise Dynamo will error
@@ -70,5 +105,6 @@ const writeListings = (listings) => {
 module.exports = {
   getHtml,
   scrapeCraigslist,
+  scrapeIndeed,
   writeListings,
 };
