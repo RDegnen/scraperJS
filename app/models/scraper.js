@@ -24,11 +24,24 @@ const scrapeCraigslist = (data) => {
       $('.result-row').each((j, elem) => {
         const href = $(elem).find('a').attr('href');
         const dataId = href.split('/');
+        // Put listing in Dynamo format
         const listing = {
-          link: href,
-          job_title: $(elem).find('.result-title').text(),
-          listing_name: `c${dataId[dataId.length - 1].split('.')[0]}`,
-          source: 'craigslist',
+          PutRequest: {
+            Item: {
+              job_title: {
+                S: $(elem).find('.result-title').text(),
+              },
+              link: {
+                S: href,
+              },
+              listing_name: {
+                S: `c${dataId[dataId.length - 1].split('.')[0]}`,
+              },
+              source: {
+                S: 'craigslist',
+              },
+            },
+          },
         };
         listings.push(listing);
       });
@@ -39,40 +52,18 @@ const scrapeCraigslist = (data) => {
 
 const writeListings = (listings) => {
   return new Promise((resolve, reject) => {
-    const paramsArray = [];
-    for (let i = 0; i < listings.length; i++) {
-      const params = {
-        PutRequest: {
-          Item: {
-            job_title: {
-              S: listings[i].job_title,
-            },
-            link: {
-              S: listings[i].link,
-            },
-            listing_name: {
-              S: listings[i].listing_name,
-            },
-            source: {
-              S: listings[i].source,
-            },
-          },
-        },
-      };
-      paramsArray.push(params);
-    }
-    // Splice the paramsArray otherwise Dynamo will error
+    // Splice the listings array otherwise Dynamo will error
     // for more than 25 items written per batch.
-    for (let i = 0; i < paramsArray.length; i++) {
+    for (let i = 0; i < listings.length; i++) {
       dynamodb.batchWriteItem({
         RequestItems: {
-          job_listings: paramsArray.splice(0, 24),
+          job_listings: listings.splice(0, 24),
         },
       }, (err, data) => {
         if (err) reject(err);
       });
     }
-    resolve('Listings successfully written to Dynamo')
+    resolve('Listings successfully written to Dynamo');
   });
 };
 
