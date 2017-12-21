@@ -21,9 +21,13 @@ const create = (req, res, next) => {
       } else if (req.params.source === 'indeed') {
         return Scraper.scrapeIndeed(data);
       } else if (req.params.source === 'all') {
-        const craigslistListings = Scraper.scrapeCraigslist(data);
-        const indeedListings = Scraper.scrapeIndeed(data);
-        return [].concat.apply([], [craigslistListings, indeedListings]);
+        // const craigslistListings = Scraper.scrapeCraigslist(data);
+        // const indeedListings = Scraper.scrapeIndeed(data);
+        Promise.all([Scraper.scrapeCraigslist(data), Scraper.scrapeIndeed(data)])
+          .then((allData) => {
+            return [].concat.apply([], allData);
+          })
+          .catch(err => next(err));
       }
     })
     .then(data => Scraper.writeListings(data))

@@ -77,8 +77,8 @@ const scrapeIndeed = (data) => {
             },
           },
         };
-        if (href === undefined) console.log('skipping...')
-        listings.push(listing);
+        if (href === undefined) console.log('skipping...');
+        else listings.push(listing);
       });
     }
     resolve(listings);
