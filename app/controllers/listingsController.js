@@ -16,6 +16,7 @@ const show = (req, res, next) => {
 const create = (req, res, next) => {
   Scraper.getHtml()
     .then(data => Scraper.scrapeCraigslist(data))
+    .then(data => Scraper.writeListings(data))
     .then(resp => res.json(resp))
     .catch(err => next(err));
 };
