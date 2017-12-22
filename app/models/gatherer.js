@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const rp = require('request-promise');
 const dynamodb = new AWS.DynamoDB();
+const config = require('config');
 
 const collectHtml = (req) => {
   return new Promise((resolve, reject) => {
@@ -64,13 +65,10 @@ const writePageToDynamo = (results, reqBody) => {
       paramsArray.push(params);
     }
 
-    const batchParams = {
-      RequestItems: {
-        scraped_pages: paramsArray,
-      },
-    };
-
-    dynamodb.batchWriteItem(batchParams, (err, data) => {
+    const RequestItems = {};
+    const scraped_pages = config.SCRAPED_PAGES_TABLE;
+    RequestItems[scraped_pages] = paramsArray;
+    dynamodb.batchWriteItem({ RequestItems }, (err, data) => {
       if (err) reject(err);
       resolve('HTML successfully written to Dynamo');
     });

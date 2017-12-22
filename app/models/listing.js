@@ -1,11 +1,12 @@
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB();
 const table = 'job_listings'
+const config = require('config');
 
 const getAllListings = () => {
   return new Promise((resolve, reject) => {
     const params = {
-      TableName: table,
+      TableName: config.JOB_LISTINGS_TABLE,
     };
     dynamodb.scan(params, (err, data) => {
       if (err) reject(err);
@@ -22,7 +23,7 @@ const getListing = (req) => {
           S: req.params.id,
         },
       },
-      TableName: table,
+      TableName: config.JOB_LISTINGS_TABLE,
     };
     dynamodb.getItem(params, (err, data) => {
       if (err) reject(err);

@@ -1,11 +1,12 @@
 const AWS = require('aws-sdk');
 const cheerio = require('cheerio');
 const dynamodb = new AWS.DynamoDB();
+const config = require('config');
 
 const getHtml = () => {
   return new Promise((resolve, reject) => {
     const params = {
-      TableName: 'scraped_pages',
+      TableName: config.SCRAPED_PAGES_TABLE,
       AttributesToGet: ['html'],
     };
     dynamodb.scan(params, (err, data) => {
@@ -99,12 +100,11 @@ const writeListings = (listings) => {
   return new Promise((resolve, reject) => {
     // Splice the listings array otherwise Dynamo will error
     // for more than 25 items written per batch.
+    const RequestItems = {};
+    const job_listings = config.JOB_LISTINGS_TABLE;
     for (let i = 0; i < listings.length; i++) {
-      dynamodb.batchWriteItem({
-        RequestItems: {
-          job_listings: listings.splice(0, 24),
-        },
-      }, (err, data) => {
+      RequestItems[job_listings] = listings.splice(0, 24);
+      dynamodb.batchWriteItem({ RequestItems }, (err, data) => {
         if (err) reject(err);
       });
     }
