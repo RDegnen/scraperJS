@@ -85,6 +85,16 @@ const scrapeIndeed = (data) => {
   });
 };
 
+const scrapeAll = (data) => {
+  return new Promise((resolve, reject) => {
+    Promise.all([scrapeCraigslist(data), scrapeIndeed(data)])
+      .then((results) => {
+        resolve([].concat(...results));
+      })
+      .catch(err => reject(err));
+  });
+};
+
 const writeListings = (listings) => {
   return new Promise((resolve, reject) => {
     // Splice the listings array otherwise Dynamo will error
@@ -106,5 +116,6 @@ module.exports = {
   getHtml,
   scrapeCraigslist,
   scrapeIndeed,
+  scrapeAll,
   writeListings,
 };
