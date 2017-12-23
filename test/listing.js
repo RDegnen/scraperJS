@@ -11,8 +11,9 @@ describe('/GET listings', () => {
     chai.request(app)
       .get('/listings')
       .end((err, res) => {
-        res.status.have.status(200);
-      done();
+        res.should.have.status(200);
+        res.should.be.a('object');
+        done();
       });
   });
 });
