@@ -29,8 +29,16 @@ const create = (req, res, next) => {
     .catch(err => next(err));
 };
 
+const destroy = (req, res, next) => {
+  Listing.getAllListings()
+    .then(data => Listing.destroyListings(data))
+    .then(resp => res.json(resp))
+    .catch(err => next(err));
+};
+
 module.exports = {
   index,
   show,
   create,
+  destroy,
 };
