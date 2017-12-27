@@ -24,7 +24,7 @@ describe('/POST listings', () => {
   it('should create all listings', () => {
     return new Promise((resolve) => {
       chai.request(app)
-        .post('listings/create/all')
+        .post('/listings/create/all')
         .then((res) => {
           res.should.have.status(200);
           resolve();
