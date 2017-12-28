@@ -58,7 +58,7 @@ const destroyListings = (listings) => {
         if (err) reject(err);
       });
     }
-    resolve('Listings successfully removed');
+    resolve('Listings successfully deleted from Dynamo');
   });
 };
 
