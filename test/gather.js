@@ -8,7 +8,8 @@ const dynamodb = new AWS.DynamoDB();
 const should = chai.should();
 
 chai.use(chaiHttp);
-
+// Doing all this so I don't have to scrape Craigslist and Indeed everytime
+// I run some tests!
 function getCraigslistHtml() {
   return new Promise((resolve, reject) => {
     const params = {
@@ -48,41 +49,57 @@ function writeToDynamo(params) {
   });
 }
 
-Promise.all([getCraigslistHtml(), getIndeedHtml()])
-  .then((results) => {
-    return [
-      {
-        PutRequest: {
-          Item: {
-            html: {
-              S: results[0],
-            },
-            source: {
-              S: 'craigslist',
-            },
-            pageId: {
-              S: 'craigslist-946',
+describe('/DELETE gather', () => {
+  it('should delete all scraped pages', () => {
+    return new Promise((resolve, reject) => {
+      chai.request(app)
+        .delete('/gather/destroy/all')
+        .then((res) => {
+          res.should.have.status(200);
+          resolve();
+        })
+        .catch(err => reject(err));
+    });
+  });
+});
+// Repopulate the pages
+after(() => {
+  Promise.all([getCraigslistHtml(), getIndeedHtml()])
+    .then((results) => {
+      return [
+        {
+          PutRequest: {
+            Item: {
+              html: {
+                S: results[0],
+              },
+              source: {
+                S: 'craigslist',
+              },
+              pageId: {
+                S: 'craigslist-946',
+              },
             },
           },
         },
-      },
-      {
-        PutRequest: {
-          Item: {
-            html: {
-              S: results[1],
-            },
-            source: {
-              S: 'indeed',
-            },
-            pageId: {
-              S: 'indeed-511',
+        {
+          PutRequest: {
+            Item: {
+              html: {
+                S: results[1],
+              },
+              source: {
+                S: 'indeed',
+              },
+              pageId: {
+                S: 'indeed-511',
+              },
             },
           },
         },
-      },
-    ];
-  })
-  .then(params => writeToDynamo(params))
-  .then(data => console.log(data))
-  .catch(err => console.log(err));
+      ];
+    })
+    .then(params => writeToDynamo(params))
+    .then(data => console.log(data))
+    .catch(err => console.log(err));
+});

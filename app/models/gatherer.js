@@ -75,7 +75,51 @@ const writePageToDynamo = (results, reqBody) => {
   });
 };
 
+const getScrapedPages = (req) => {
+  return new Promise((resolve, reject) => {
+    const source = req.params.source;
+    if (source === 'all') {
+      const params = {
+        TableName: config.SCRAPED_PAGES_TABLE,
+      };
+      dynamodb.scan(params, (err, data) => {
+        if (err) reject(err);
+        resolve(data);
+      });
+    }
+  });
+};
+
+const deleteScrapedPages = (data) => {
+  return new Promise((resolve, reject) => {
+    const itemsToDelete = [];
+    for (let i = 0; i < data.Items.length; i++) {
+      const item = {
+        DeleteRequest: {
+          Key: {
+            pageId: {
+              S: data.Items[i].pageId.S,
+            },
+          },
+        },
+      };
+      itemsToDelete.push(item);
+    }
+    const RequestItems = {};
+    const scraped_pages = config.SCRAPED_PAGES_TABLE;
+    for (let i = 0; i < itemsToDelete.length; i++) {
+      RequestItems[scraped_pages] = itemsToDelete.splice(0, 24);
+      dynamodb.batchWriteItem({ RequestItems }, (err, data) => {
+        if (err) reject(err);
+      });
+    }
+    resolve('Pages successfully deleted from Dynamo');
+  });
+};
+
 module.exports = {
   collectHtml,
   writePageToDynamo,
+  getScrapedPages,
+  deleteScrapedPages,
 };

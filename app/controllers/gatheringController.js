@@ -7,6 +7,14 @@ const create = (req, res, next) => {
     .catch(err => next(err));
 };
 
+const destroy = (req, res, next) => {
+  Gatherer.getScrapedPages(req)
+    .then(data => Gatherer.deleteScrapedPages(data))
+    .then(resp => res.json(resp))
+    .catch(err => next(err));
+};
+
 module.exports = {
   create,
+  destroy,
 };
