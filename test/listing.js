@@ -20,31 +20,44 @@ describe('/POST listings', () => {
   });
 });
 
-describe('/GET listings', () => {
-  it('should get all job listings', () => {
-    return new Promise((resolve, reject) => {
-      chai.request(app)
-        .get('/listings')
-        .then((res) => {
-          res.should.have.status(200);
-          res.should.be.a('object');
-          resolve();
-        })
-        .catch(err => reject(err));
+describe('Getting and deleting listings', () => {
+
+  beforeEach((done) => {
+    chai.request(app)
+      .post('/listings/create/all')
+      .then((res) => {
+        done();
+      })
+      .catch(err => console.log(err));
+  });
+  
+  describe('/GET listings', () => {
+    it('should get all job listings', () => {
+      return new Promise((resolve, reject) => {
+        chai.request(app)
+          .get('/listings')
+          .then((res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.Items.should.have.lengthOf(92);
+            resolve();
+          })
+          .catch(err => reject(err));
+      });
     });
   });
-});
 
-describe('/DELETE listings', () => {
-  it('should delete all listings', () => {
-    return new Promise((resolve, reject) => {
-      chai.request(app)
-        .delete('/listings/destroy/all')
-        .then((res) => {
-          res.should.have.status(200);
-          resolve();
-        })
-        .catch(err => reject(err));
+  describe('/DELETE listings', () => {
+    it('should delete all listings', () => {
+      return new Promise((resolve, reject) => {
+        chai.request(app)
+          .delete('/listings/destroy/all')
+          .then((res) => {
+            res.should.have.status(200);
+            resolve();
+          })
+          .catch(err => reject(err));
+      });
     });
   });
 });

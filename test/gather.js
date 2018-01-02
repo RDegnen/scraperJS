@@ -18,7 +18,8 @@ function getCraigslistHtml() {
     };
     s3.getObject(params, (err, data) => {
       if (err) reject(err);
-      resolve(data.Body.toString());
+      const htmlString = data.Body.toString();
+      resolve(htmlString);
     });
   });
 }
@@ -31,7 +32,8 @@ function getIndeedHtml() {
     };
     s3.getObject(params, (err, data) => {
       if (err) reject(err);
-      resolve(data.Body.toString());
+      const htmlString = data.Body.toString();
+      resolve(htmlString);
     });
   });
 }
@@ -48,58 +50,60 @@ function writeToDynamo(params) {
     });
   });
 }
+// FIXME for some reason the html string written to dynamo has extra backslashes
+// which prevents the scraper from working
 
-describe('/DELETE gather', () => {
-  it('should delete all scraped pages', () => {
-    return new Promise((resolve, reject) => {
-      chai.request(app)
-        .delete('/gather/destroy/all')
-        .then((res) => {
-          res.should.have.status(200);
-          resolve();
-        })
-        .catch(err => reject(err));
-    });
-  });
-});
-// Repopulate the pages
-after(() => {
-  Promise.all([getCraigslistHtml(), getIndeedHtml()])
-    .then((results) => {
-      return [
-        {
-          PutRequest: {
-            Item: {
-              html: {
-                S: results[0],
-              },
-              source: {
-                S: 'craigslist',
-              },
-              pageId: {
-                S: 'craigslist-946',
-              },
-            },
-          },
-        },
-        {
-          PutRequest: {
-            Item: {
-              html: {
-                S: results[1],
-              },
-              source: {
-                S: 'indeed',
-              },
-              pageId: {
-                S: 'indeed-511',
-              },
-            },
-          },
-        },
-      ];
-    })
-    .then(params => writeToDynamo(params))
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
-});
+// describe('/DELETE gather', () => {
+//   it('should delete all scraped pages', () => {
+//     return new Promise((resolve, reject) => {
+//       chai.request(app)
+//         .delete('/gather/destroy/all')
+//         .then((res) => {
+//           res.should.have.status(200);
+//           resolve();
+//         })
+//         .catch(err => reject(err));
+//     });
+//   });
+// });
+// Repopulate the pages with the data from s3
+// after(() => {
+//   Promise.all([getCraigslistHtml(), getIndeedHtml()])
+//     .then((results) => {
+//       return [
+//         {
+//           PutRequest: {
+//             Item: {
+//               html: {
+//                 S: results[0],
+//               },
+//               source: {
+//                 S: 'craigslist',
+//               },
+//               pageId: {
+//                 S: 'craigslist-946',
+//               },
+//             },
+//           },
+//         },
+//         {
+//           PutRequest: {
+//             Item: {
+//               html: {
+//                 S: results[1],
+//               },
+//               source: {
+//                 S: 'indeed',
+//               },
+//               pageId: {
+//                 S: 'indeed-511',
+//               },
+//             },
+//           },
+//         },
+//       ];
+//     })
+//     .then(params => writeToDynamo(params))
+//     .then(data => console.log(data))
+//     .catch(err => console.log(err));
+// });
