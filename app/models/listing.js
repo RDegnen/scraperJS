@@ -5,53 +5,27 @@ const config = require('config');
 
 const getMultipleListings = (req) => {
   return new Promise((resolve, reject) => {
-    switch (req.params.source) {
-      case 'all': {
-        const params = {
-          TableName: config.JOB_LISTINGS_TABLE,
-        };
-        dynamodb.scan(params, (err, data) => {
-          if (err) reject(err);
-          resolve(data);
-        });
-        break;
-      }
-      case 'craigslist': {
-        const params = {
-          TableName: config.JOB_LISTINGS_TABLE,
-          ExpressionAttributeValues: {
-            ':s': {
-              S: req.params.source,
-            },
+    const source = req.params.source;
+    let params;
+    if (source === 'all') {
+      params = {
+        TableName: config.JOB_LISTINGS_TABLE,
+      };
+    } else if (source === 'craigslist' || source === 'indeed') {
+      params = {
+        TableName: config.JOB_LISTINGS_TABLE,
+        ExpressionAttributeValues: {
+          ':s': {
+            S: req.params.source,
           },
-          FilterExpression: 'sourceSite = :s',
-        };
-        dynamodb.scan(params, (err, data) => {
-          if (err) reject(err);
-          resolve(data);
-        });
-        break;
-      }
-      case 'indeed': {
-        const params = {
-          TableName: config.JOB_LISTINGS_TABLE,
-          ExpressionAttributeValues: {
-            ':s': {
-              S: req.params.source,
-            },
-          },
-          FilterExpression: 'sourceSite = :s',
-        };
-        dynamodb.scan(params, (err, data) => {
-          if (err) reject(err);
-          resolve(data);
-        });
-        break;
-      }
-      default: {
-        break;
-      }
+        },
+        FilterExpression: 'sourceSite = :s',
+      };
     }
+    dynamodb.scan(params, (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
   });
 };
 
