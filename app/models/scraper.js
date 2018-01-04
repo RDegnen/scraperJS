@@ -38,7 +38,7 @@ const scrapeCraigslist = (data) => {
               listing_name: {
                 S: `c${dataId[dataId.length - 1].split('.')[0]}`,
               },
-              source: {
+              sourceSite: {
                 S: 'craigslist',
               },
             },
@@ -72,7 +72,7 @@ const scrapeIndeed = (data) => {
               listing_name: {
                 S: $(elem).attr('id'),
               },
-              source: {
+              sourceSite: {
                 S: 'indeed',
               },
             },

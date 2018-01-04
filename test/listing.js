@@ -34,11 +34,27 @@ describe('Getting and deleting listings', () => {
     it('should get all job listings', () => {
       return new Promise((resolve, reject) => {
         chai.request(app)
-          .get('/listings')
+          .get('/listings/all')
           .then((res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
             res.body.Items.should.have.lengthOf(92);
+            resolve();
+          })
+          .catch(err => reject(err));
+      });
+    });
+  });
+
+  describe('/Get all source listings', () => {
+    it('should get all indeed listings', () => {
+      return new Promise((resolve, reject) => {
+        chai.request(app)
+          .get('/listings/indeed')
+          .then((res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.Items.should.have.lengthOf(10);
             resolve();
           })
           .catch(err => reject(err));
