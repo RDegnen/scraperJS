@@ -21,7 +21,6 @@ describe('/POST listings', () => {
 });
 
 describe('Getting and deleting listings', () => {
-
   beforeEach((done) => {
     chai.request(app)
       .post('/listings/create/all')
@@ -30,7 +29,7 @@ describe('Getting and deleting listings', () => {
       })
       .catch(err => console.log(err));
   });
-  
+
   describe('/GET listings', () => {
     it('should get all job listings', () => {
       return new Promise((resolve, reject) => {

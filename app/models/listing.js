@@ -3,7 +3,7 @@ const dynamodb = new AWS.DynamoDB();
 const table = 'job_listings'
 const config = require('config');
 
-const getAllListings = () => {
+const getMultipleListings = () => {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: config.JOB_LISTINGS_TABLE,
@@ -63,7 +63,7 @@ const destroyListings = (listings) => {
 };
 
 module.exports = {
-  getAllListings,
+  getMultipleListings,
   getListing,
   destroyListings,
 };
