@@ -33,7 +33,7 @@ const getListing = (req) => {
   return new Promise((resolve, reject) => {
     const params = {
       Key: {
-        listing_name: {
+        listingId: {
           S: req.params.id,
         },
       },
@@ -54,8 +54,11 @@ const destroyListings = (listings) => {
       const item = {
         DeleteRequest: {
           Key: {
-            listing_name: {
-              S: listings.Items[i].listing_name.S,
+            listingId: {
+              S: listings.Items[i].listingId.S,
+            },
+            listingDate: {
+              S: listings.Items[i].listingDate.S,
             },
           },
         },
@@ -70,6 +73,7 @@ const destroyListings = (listings) => {
       RequestItems[job_listings] = itemsToDelete.splice(0, 24);
       dynamodb.batchWriteItem({ RequestItems }, (err, data) => {
         if (err) reject(err);
+        console.log(data)
       });
     }
     resolve('Listings successfully deleted from Dynamo');

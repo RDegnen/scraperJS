@@ -29,17 +29,20 @@ const scrapeCraigslist = (data) => {
         const listing = {
           PutRequest: {
             Item: {
-              job_title: {
+              jobTitle: {
                 S: $(elem).find('.result-title').text(),
               },
               link: {
                 S: href,
               },
-              listing_name: {
+              listingId: {
                 S: `c${dataId[dataId.length - 1].split('.')[0]}`,
               },
               sourceSite: {
                 S: 'craigslist',
+              },
+              listingDate: {
+                S: Date.now().toString(),
               },
             },
           },
@@ -63,17 +66,20 @@ const scrapeIndeed = (data) => {
         const listing = {
           PutRequest: {
             Item: {
-              job_title: {
+              jobTitle: {
                 S: $(elem).find('a').attr('title'),
               },
               link: {
                 S: `https://www.indeed.com/${href}`,
               },
-              listing_name: {
+              listingId: {
                 S: $(elem).attr('id'),
               },
               sourceSite: {
                 S: 'indeed',
+              },
+              listingDate: {
+                S: Date.now().toString(),
               },
             },
           },
