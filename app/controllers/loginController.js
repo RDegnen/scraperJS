@@ -38,7 +38,7 @@ const githubAuth = (req, res, next) => {
       client_secret: config.GITHUB_CLIENT_SECRET,
     };
     request.post({
-      url: 'https://github.com/login/oauth/access_token',
+      uri: 'https://github.com/login/oauth/access_token',
       formData: payload,
       headers: { Accept: 'application/json' },
     }, (err, resp, body) => {
@@ -46,6 +46,8 @@ const githubAuth = (req, res, next) => {
         const token = JSON.parse(body).access_token;
         res.status(302);
         authorized(res, token);
+      } else if (err) {
+        next(err);
       }
     });
   } else {
