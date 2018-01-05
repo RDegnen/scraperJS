@@ -1,13 +1,14 @@
 const config = require('config');
-const url = require('url');
 const request = require('request');
+const url = require('url');
+const crypto = require('crypto');
 
 const githubConfig = {
   client_id: config.GITHUB_CLIENT_ID,
   secret: config.GITHUB_CLIENT_SECRET,
   redirect_url: '',
   scope: '',
-  state: Math.round(Math.random() * 10),
+  state: crypto.randomBytes(20).toString('hex'),
 };
 
 const authorized = (res, token) => {
@@ -30,22 +31,26 @@ const login = (req, res, next) => {
 
 const githubAuth = (req, res, next) => {
   const query = url.parse(req.url, true).query;
-  const payload = {
-    code: query.code,
-    client_id: config.GITHUB_CLIENT_ID,
-    client_secret: config.GITHUB_CLIENT_SECRET,
-  };
-  request.post({
-    url: 'https://github.com/login/oauth/access_token',
-    formData: payload,
-    headers: { Accept: 'application/json' },
-  }, (err, resp, body) => {
-    if (!err && resp.statusCode === 200) {
-      const token = JSON.parse(body).access_token;
-      res.status(302);
-      authorized(res, token);
-    }
-  });
+  if (query.state === githubConfig.state) {
+    const payload = {
+      code: query.code,
+      client_id: config.GITHUB_CLIENT_ID,
+      client_secret: config.GITHUB_CLIENT_SECRET,
+    };
+    request.post({
+      url: 'https://github.com/login/oauth/access_token',
+      formData: payload,
+      headers: { Accept: 'application/json' },
+    }, (err, resp, body) => {
+      if (!err && resp.statusCode === 200) {
+        const token = JSON.parse(body).access_token;
+        res.status(302);
+        authorized(res, token);
+      }
+    });
+  } else {
+    res.status(401).send();
+  }
 };
 
 module.exports = {
