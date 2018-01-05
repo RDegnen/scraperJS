@@ -13,13 +13,13 @@ const githubConfig = {
 };
 
 const authorized = (res, token) => {
-  console.log('HERE ' + token)
   request.get({
     url: "https://api.github.com/user",
     headers: {'Authorization': 'token '+token, 'User-Agent': 'Mozilla/5.0'}},
     (error, response, body) => {
       if (!error && response.statusCode == 200) {
           body = JSON.parse(body);
+          console.log(body)
           const user = body.login;
           res.end("<!DOCTYPE html><html><body>"+
         	 "<style>.key{font-size:18px; color:blue;font-weight:bold;}.string,.number,.boolean,.null{font-size:18px;}</style>"+
@@ -27,6 +27,7 @@ const authorized = (res, token) => {
         	   "</pre></body></html>"
            );
          } else {
+           console.log('FAILED')
            console.log(body);
            res.end(body);
          }
@@ -35,11 +36,7 @@ const authorized = (res, token) => {
 };
 
 router.get('/', (req, res) => {
-  console.log('AUTHORIZED TOP')
-  console.log(githubConfig.state)
   const query = url.parse(req.url, true).query;
-  console.log('MADE IT')
-  console.log(query)
   // if (query == githubConfig.state) {
     const payload = {
       code: query.code,
