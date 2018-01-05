@@ -4,14 +4,12 @@ const app = express();
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const config = require('config');
-const request = require('request');
 // routes
 const index = require('./config/routes/index');
 const listings = require('./config/routes/listings');
 const gather = require('./config/routes/gather');
 const login = require('./config/routes/login');
-const authorized = require('./config/routes/authorized');
+const auth = require('./config/routes/auth');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -22,7 +20,7 @@ app.use('/', index);
 app.use('/listings', listings);
 app.use('/gather', gather);
 app.use('/login', login);
-app.use('/authorized', authorized);
+app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
