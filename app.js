@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const index = require('./config/routes/index');
 const listings = require('./config/routes/listings');
 const gather = require('./config/routes/gather');
+const login = require('./config/routes/login');
+const auth = require('./config/routes/auth');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -17,6 +19,8 @@ app.use(cookieParser());
 app.use('/', index);
 app.use('/listings', listings);
 app.use('/gather', gather);
+app.use('/login', login);
+app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
