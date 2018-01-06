@@ -1,6 +1,4 @@
 {
   "SCRAPED_PAGES_TABLE": "scraped_pages",
-  "JOB_LISTINGS_TABLE": "job_listings",
-  "GITHUB_CLIENT_ID": "6fafb82669fb10381ef6",
-  "GITHUB_CLIENT_SECRET": "6b7a896942457e3019ea166d045a8418a7f8ff9f"
+  "JOB_LISTINGS_TABLE": "job_listings"
 }
