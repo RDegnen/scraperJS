@@ -1,4 +1,5 @@
 {
   "SCRAPED_PAGES_TABLE": "scraped_pages",
-  "JOB_LISTINGS_TABLE": "job_listings"
+  "JOB_LISTINGS_TABLE": "job_listings",
+  "USERS_TABLE": "users"
 }

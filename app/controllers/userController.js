@@ -2,6 +2,7 @@ const config = require('config');
 const request = require('request');
 const url = require('url');
 const crypto = require('crypto');
+const User = require('../models/user');
 
 const githubConfig = {
   client_id: process.env.GITHUB_CLIENT_ID,
@@ -11,13 +12,23 @@ const githubConfig = {
   state: crypto.randomBytes(20).toString('hex'),
 };
 
-const authorized = (res, token) => {
+const authorized = (res, token, next) => {
+  // When a user is successfully authorized via Github, attempt to get the
+  // user from dynamo and if they exist, just update the token. If not then
+  // create the user.
   request.get({
     url: 'https://api.github.com/user',
-    headers: { Authorization: `token ${token}`, 'User-Agent': 'Mozilla/5.0' }
+    headers: { Authorization: `token ${token}`, 'User-Agent': 'Mozilla/5.0' },
   }, (err, resp, body) => {
     if (!err && resp.statusCode === 200) {
-      res.json(JSON.parse(body));
+      const userData = JSON.parse(body);
+      User.getUser(userData)
+        .then((data) => {
+          if (data.Item) User.updateToken(data.Item, token);
+          else User.createUser(userData, token);
+        })
+        .then(data => res.status(200).json({ data }))
+        .catch(err => next(err));
     }
   });
 };
@@ -45,7 +56,7 @@ const githubAuth = (req, res, next) => {
       if (!err && resp.statusCode === 200) {
         const token = JSON.parse(body).access_token;
         res.status(302);
-        authorized(res, token);
+        authorized(res, token, next);
       } else if (err) {
         next(err);
       }
@@ -55,7 +66,15 @@ const githubAuth = (req, res, next) => {
   }
 };
 
+const logout = (req, res, next) => {
+  // FIXME implement authentication for requests before testing this
+  User.destroyToken(req.currentUser, githubConfig, req.token)
+    .then(data => res.status(200).json(data))
+    .catch(err => next(err));
+};
+
 module.exports = {
   login,
   githubAuth,
+  logout,
 };
