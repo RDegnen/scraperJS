@@ -4,8 +4,8 @@ const url = require('url');
 const crypto = require('crypto');
 
 const githubConfig = {
-  client_id: config.GITHUB_CLIENT_ID,
-  secret: config.GITHUB_CLIENT_SECRET,
+  client_id: process.env.GITHUB_CLIENT_ID,
+  secret: process.env.GITHUB_CLIENT_SECRET,
   redirect_url: '',
   scope: '',
   state: crypto.randomBytes(20).toString('hex'),
@@ -17,7 +17,7 @@ const authorized = (res, token) => {
     headers: { Authorization: `token ${token}`, 'User-Agent': 'Mozilla/5.0' }
   }, (err, resp, body) => {
     if (!err && resp.statusCode === 200) {
-      res.json(body);
+      res.json(JSON.parse(body));
     }
   });
 };
@@ -34,8 +34,8 @@ const githubAuth = (req, res, next) => {
   if (query.state === githubConfig.state) {
     const payload = {
       code: query.code,
-      client_id: config.GITHUB_CLIENT_ID,
-      client_secret: config.GITHUB_CLIENT_SECRET,
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
     };
     request.post({
       uri: 'https://github.com/login/oauth/access_token',
