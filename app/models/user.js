@@ -86,4 +86,5 @@ module.exports = {
   createUser,
   getUser,
   updateToken,
+  destroyToken,
 };
