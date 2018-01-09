@@ -3,7 +3,7 @@ const dynamodb = new AWS.DynamoDB();
 const config = require('config');
 const request = require('request');
 
-const createUser = (userData, token) => {
+const createUser = (userData, authToken) => {
   return new Promise((resolve, reject) => {
     const params = {
       Item: {
@@ -13,8 +13,8 @@ const createUser = (userData, token) => {
         userName: {
           S: userData.login,
         },
-        token: {
-          S: token,
+        authToken: {
+          S: authToken,
         },
       },
       TableName: config.USERS_TABLE,
@@ -43,7 +43,7 @@ const getUser = (userData) => {
   });
 };
 
-const updateToken = (userData, token) => {
+const updateToken = (userData, authToken) => {
   return new Promise((resolve, reject) => {
     const params = {
       Key: {
@@ -53,11 +53,11 @@ const updateToken = (userData, token) => {
       },
       TableName: config.USERS_TABLE,
       ExpressionAttributeNames: {
-        '#T': 'token',
+        '#T': 'authToken',
       },
       ExpressionAttributeValues: {
         ':t': {
-          S: token,
+          S: authToken,
         },
       },
       UpdateExpression: 'SET #T = :t',
@@ -70,11 +70,11 @@ const updateToken = (userData, token) => {
   });
 };
 
-const destroyToken = (currentUser, githubConfig, token) => {
-  // Revoke the token from github and then remove it from dynamo
+const destroyToken = (currentUser, githubConfig, authToken) => {
+  // Revoke the authToken from github and then remove it from dynamo
   return new Promise((resolve, reject) => {
     request.delete({
-      url: `https://api.github.com/applications/${githubConfig.client_id}/tokens/${token}`
+      url: `https://api.github.com/applications/${githubConfig.client_id}/tokens/${authToken}`
     }, (err, resp, body) => {
       if (err) console.log(err);
       else console.log('Token successfully revoked');
