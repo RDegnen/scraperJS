@@ -48,7 +48,7 @@ const updateToken = (userData, token) => {
     const params = {
       Key: {
         userId: {
-          N: userData.id.toString(),
+          N: userData.userId.N.toString(),
         },
       },
       TableName: config.USERS_TABLE,
@@ -56,9 +56,12 @@ const updateToken = (userData, token) => {
         '#T': 'token',
       },
       ExpressionAttributeValues: {
-        ':t': token,
+        ':t': {
+          S: token,
+        },
       },
       UpdateExpression: 'SET #T = :t',
+      ReturnValues: 'ALL_NEW',
     };
     dynamodb.updateItem(params, (err, data) => {
       if (err) reject(err);
