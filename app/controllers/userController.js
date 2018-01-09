@@ -67,8 +67,7 @@ const githubAuth = (req, res, next) => {
 };
 
 const logout = (req, res, next) => {
-  // FIXME implement authentication for requests before testing this
-  User.destroyToken(req.currentUser, githubConfig, req.currentUser.authToken)
+  User.destroyToken(req.currentUser, githubConfig, req.currentUser.authToken.S)
     .then(data => res.status(200).json(data))
     .catch(err => next(err));
 };

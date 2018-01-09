@@ -73,13 +73,18 @@ const updateToken = (userData, authToken) => {
 const destroyToken = (currentUser, githubConfig, authToken) => {
   // Revoke the authToken from github and then remove it from dynamo
   return new Promise((resolve, reject) => {
+    const authBuff = Buffer.from(`${githubConfig.client_id}:${githubConfig.secret}`).toString('base64');
     request.delete({
-      url: `https://api.github.com/applications/${githubConfig.client_id}/tokens/${authToken}`
+      url: `https://api.github.com/applications/${githubConfig.client_id}/tokens/${authToken}`,
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+        Authorization: `Basic ${authBuff}`,
+      },
     }, (err, resp, body) => {
       if (err) console.log(err);
-      else console.log('Token successfully revoked');
+      else console.log('Token successfully revoked', body);
     });
-    updateToken(currentUser, null)
+    updateToken(currentUser, 'None')
       .then(data => resolve(data))
       .catch(err => reject(err));
   });

@@ -5,6 +5,6 @@ const routeMiddleware = require('./middleware/routesMiddleware');
 
 router.get('/login', userController.login);
 router.get('/auth', userController.githubAuth);
-router.get('/logout', routeMiddleware.authenticate, userController.logout);
+router.post('/logout', routeMiddleware.authenticate, userController.logout);
 
 module.exports = router;
