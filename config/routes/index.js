@@ -7,7 +7,7 @@ router.get('/', (req, res, next) => {
     "<style>body{text-align: center;}a{color: #000000;border: 1px solid black;padding: 10px 30px;text-decoration: none;margin-top: 10em;display: inline-block;font-size: 20px;transition: all .5s;}"+
     "a:hover{background-color: black;color: white;}"+
     "</style>"+
-    "<a href='login'>Login!</a></body></html>");
+    "<a href='users/login'>Login!</a></body></html>");
   res.end();
 });
 

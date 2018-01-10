@@ -1,6 +1,5 @@
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB();
-const table = 'job_listings'
 const config = require('config');
 
 const getMultipleListings = (req) => {
