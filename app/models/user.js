@@ -90,9 +90,28 @@ const destroyToken = (currentUser, githubConfig, authToken) => {
   });
 };
 
+const destroyUser = (currentUser) => {
+  // This function is only being used for tests right now
+  return new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        userId: {
+          N: currentUser.userId.N.toString(),
+        },
+      },
+      TableName: config.USERS_TABLE,
+    };
+    dynamodb.deleteItem(params, (err, data) => {
+      if (err) reject(err);
+      resolve('User deleted', data);
+    });
+  });
+};
+
 module.exports = {
   createUser,
   getUser,
   updateToken,
   destroyToken,
+  destroyUser,
 };
