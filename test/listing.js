@@ -18,9 +18,12 @@ describe('Listing actions', () => {
     },
   };
 
-  before(() => {
+  before((done) => {
     User.createUser(userData, process.env.TEST_TOKEN_2)
-      .then(data => console.log(data))
+      .then((data) => {
+        console.log(data);
+        done();
+      })
       .catch(err => console.log(err));
   });
 
