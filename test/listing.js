@@ -61,6 +61,24 @@ describe('Listing actions', () => {
     });
   });
 
+  describe('/GET listings with invalid token', () => {
+    it('return with a 401', () => {
+      return new Promise((resolve, reject) => {
+        chai.request(app)
+          .get('/listings/all')
+          .set('authtoken', 'invalid_token')
+          .then((res) => {
+            console.log(res);
+            reject();
+          })
+          .catch((err) => {
+            err.should.have.status(401);
+            resolve();
+          });
+      });
+    });
+  });
+
   describe('/Get all source listings', () => {
     it('should get all indeed listings', () => {
       return new Promise((resolve, reject) => {
