@@ -4,6 +4,7 @@ const app = express();
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 // routes
 const index = require('./config/routes/index');
 const listings = require('./config/routes/listings');
@@ -14,6 +15,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 app.use('/', index);
 app.use('/listings', listings);
@@ -38,6 +40,6 @@ app.use((err, req, res, next) => {
   res.json(err);
 });
 
-app.listen(3000, () => console.log('App listening on port 3000!'))
+app.listen(8080, () => console.log('App listening on port 8080!'))
 
 module.exports = app;

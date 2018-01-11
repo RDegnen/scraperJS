@@ -1,5 +1,5 @@
 const Listing = require('../models/listing');
-const Scraper = require('../models/scraper')
+const Scraper = require('../models/scraper');
 
 const index = (req, res, next) => {
   Listing.getMultipleListings(req)
