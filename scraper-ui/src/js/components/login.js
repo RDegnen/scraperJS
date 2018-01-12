@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+// import location from 'window';
 
 class Login extends Component {
   login() {
     fetch('/users/login', {
       method: 'GET',
-      mode: 'no-cors',
+      mode: 'cors',
     })
-    .then((data) => {
-      console.log(data);
+    .then(res => res.json())
+    .then((authUrl) => {
+      window.location.assign(authUrl);
     })
     .catch(err => console.log(err));
   }

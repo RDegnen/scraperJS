@@ -34,10 +34,9 @@ const authorized = (res, token, next) => {
 };
 
 const login = (req, res, next) => {
-  const url = `https://github.com/login/oauth/authorize?client_id=${githubConfig.client_id}`
+  const authUrl = `https://github.com/login/oauth/authorize?client_id=${githubConfig.client_id}`
     + `${githubConfig.scope ? `&scope=${githubConfig.scope}` : ''}&state=${githubConfig.state}`;
-  res.set('location', url);
-  res.status(302).end();
+  res.status(200).json(authUrl);
 };
 
 const githubAuth = (req, res, next) => {
