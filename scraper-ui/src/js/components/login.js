@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import location from 'window';
 
 class Login extends Component {
   login() {
