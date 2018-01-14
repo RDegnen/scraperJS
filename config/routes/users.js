@@ -4,7 +4,7 @@ const userController = require('../../app/controllers/userController');
 const routeMiddleware = require('./middleware/routesMiddleware');
 
 router.get('/login', userController.login);
-router.get('/auth', userController.githubAuth);
+router.post('/auth', userController.githubAuth);
 router.post('/logout', routeMiddleware.authenticate, userController.logout);
 
 module.exports = router;

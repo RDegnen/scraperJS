@@ -27,21 +27,22 @@ const authorized = (res, token, next) => {
           if (data.Item) User.updateToken(data.Item, token);
           else User.createUser(userData, token);
         })
-        .then(data => res.status(200).json({ data }))
+        .then(() => {
+          res.status(200).json({ authToken: token });
+        })
         .catch(err => next(err));
     }
   });
 };
 
 const login = (req, res, next) => {
-  const url = `https://github.com/login/oauth/authorize?client_id=${githubConfig.client_id}`
+  const authUrl = `https://github.com/login/oauth/authorize?client_id=${githubConfig.client_id}`
     + `${githubConfig.scope ? `&scope=${githubConfig.scope}` : ''}&state=${githubConfig.state}`;
-  res.set('location', url);
-  res.status(302).end();
+  res.status(200).json(authUrl);
 };
 
 const githubAuth = (req, res, next) => {
-  const query = url.parse(req.url, true).query;
+  const query = url.parse(req.body.authUrl, true).query;
   if (query.state === githubConfig.state) {
     const payload = {
       code: query.code,
