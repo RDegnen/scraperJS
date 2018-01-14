@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import logo from '../logo.svg';
 import '../styles/App.css';
 import Login from './components/login';
+import Authorize from './components/auth';
 
 class Header extends Component {
   render() {
@@ -21,6 +22,7 @@ class Body extends Component {
       <div>
         <Switch>
           <Route path='/login' component={Login}/>
+          <Route path='/auth' component={Authorize}/>
         </Switch>
       </div>
     );
