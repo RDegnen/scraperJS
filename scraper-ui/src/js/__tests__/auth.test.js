@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { MemoryRouter, withRouter } from 'react-router-dom'
 import Authorize from '../components/auth/auth';
 import Login from '../components/auth/login';
@@ -51,18 +51,19 @@ describe('Logout Component', () => {
       })
     });
   });
-  // FIXME Figure out how to get to login function with spyOn
-  // something with the component being wrapped by router
+  // Had to first call mount and then find child component as a string
+  // to be able to access an instance of it
   it('Removes the token from localStorage', async () => {
-    const wrapper = shallow(
+    const wrapper = mount(
       <MemoryRouter>
         <Logout />
       </MemoryRouter>
     );
-    console.log(wrapper.dive().instance())
-    const spy = jest.spyOn(wrapper.dive().instance(), 'logout');
-    await wrapper.find('#sign-out-btn').simulate('click');
-    expect(spy).toHaveBeenCalled()
+    const componentWrapper = wrapper.find('Logout');
+    await componentWrapper.find('#sign-out-btn').simulate('click');
     expect(localStorage.getItem('authToken')).toBe(null);
+    // Example for getting a child components instance for reference
+    // const component = wrapper.find('Logout').instance();
+    // const spy = jest.spyOn(component, 'logout');
   });
 });
