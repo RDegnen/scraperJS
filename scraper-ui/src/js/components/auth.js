@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Authorize extends Component {
   authorizeGithub(authUrl) {
     let data = { authUrl: authUrl }
-    fetch('/users/auth', {
+    return fetch('/users/auth', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -13,7 +13,7 @@ class Authorize extends Component {
     })
     .then(res => res.json())
     .then((data) => {
-      console.log(data);
+      localStorage.setItem('authToken', data.authToken);
     })
     .catch(err => console.log(err));
   }
@@ -23,7 +23,7 @@ class Authorize extends Component {
 
   render() {
     return (
-      <h2>Authorized</h2>
+      <h2 className='h2-auth'>Authorized</h2>
     );
   }
 }

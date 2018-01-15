@@ -1,4 +1,3 @@
-const config = require('config');
 const request = require('request');
 const url = require('url');
 const crypto = require('crypto');
@@ -42,7 +41,8 @@ const login = (req, res, next) => {
 };
 
 const githubAuth = (req, res, next) => {
-  const query = url.parse(req.body.authUrl, true).query;
+  const { authUrl } = req.body;
+  const query = url.parse(authUrl, true).query;
   if (query.state === githubConfig.state) {
     const payload = {
       code: query.code,
