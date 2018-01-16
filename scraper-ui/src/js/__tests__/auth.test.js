@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow, mount } from 'enzyme';
-import { MemoryRouter, withRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 import Authorize from '../components/auth/auth';
 import Login from '../components/auth/login';
 import Logout from '../components/auth/logout';
@@ -63,7 +63,6 @@ describe('Logout Component', () => {
     await componentWrapper.find('#sign-out-btn').simulate('click');
     expect(localStorage.getItem('authToken')).toBe(null);
     // Example for getting a child components instance for reference
-    // const component = wrapper.find('Logout').instance();
-    // const spy = jest.spyOn(component, 'logout');
+    // wrapper.find('Logout').instance();
   });
 });
