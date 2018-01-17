@@ -48,7 +48,7 @@ class JobListings extends Component {
           <ul>
             <li><button value='all' onClick={this.filterListings}>All</button></li>
             <li><button value='craigslist' onClick={this.filterListings}>Craigslist</button></li>
-            <li><button value='indeed' onClick={this.filterListings}>Indeed</button></li>
+            <li><button id='indeed-filter-btn' value='indeed' onClick={this.filterListings}>Indeed</button></li>
           </ul>
         </div>
         <div>

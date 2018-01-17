@@ -39,5 +39,17 @@ describe('Job listings', () => {
     const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
     await wrapper.instance().getAllJobListings();
     expect(wrapper.state('jobListings')).toHaveLength(2);
+    expect(wrapper.state('filteredListings')).toHaveLength(2);
+  });
+
+  it('filters listings', async () => {
+    const mockEvent = {
+      target: { value: 'indeed' },
+      preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
+    }
+    const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
+    await wrapper.instance().getAllJobListings();
+    wrapper.find('#indeed-filter-btn').simulate('click', mockEvent);
+    expect(wrapper.state('filteredListings')).toHaveLength(1);
   });
 })
