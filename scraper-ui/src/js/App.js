@@ -25,25 +25,30 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.setAuthorized = this.setAuthorized.bind(this);
-    this.state = { isAuthenticated: false };
+    this.state = { isAuthorized: false };
   }
 
   setAuthorized(val) {
-    this.setState({ isAuthenticated: val });
+    this.setState({ isAuthorized: val });
   }
 
   render() {
+    const authorized = this.state.isAuthorized;
     return (
       <BrowserRouter>
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to ScraperJS</h1>
-            <Logout setAuthorized={this.setAuthorized}/>
+            {authorized &&
+              <Logout setAuthorized={this.setAuthorized}/>
+            }
           </header>
           <div>
             <Switch>
-              <Route path='/login' component={Login}/>
+              {!authorized &&
+                <Route path='/login' component={Login}/>
+              }
               <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
             </Switch>
           </div>
