@@ -40,15 +40,14 @@ class App extends Component {
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to ScraperJS</h1>
-            {authorized &&
+            {authorized ? (
               <Logout setAuthorized={this.setAuthorized}/>
-            }
+            ) : (
+              <Route path='/login' component={Login}/>
+            )}
           </header>
           <div>
             <Switch>
-              {!authorized &&
-                <Route path='/login' component={Login}/>
-              }
               <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
             </Switch>
           </div>
