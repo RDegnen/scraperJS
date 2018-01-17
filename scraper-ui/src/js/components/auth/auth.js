@@ -14,6 +14,7 @@ class Authorize extends Component {
     .then(res => res.json())
     .then((data) => {
       localStorage.setItem('authToken', data.authToken);
+      this.props.setAuthorized(true);
     })
     .catch(err => console.log(err));
   }

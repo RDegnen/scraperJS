@@ -19,6 +19,7 @@ class Logout extends Component {
     })
     .then(() => {
       localStorage.removeItem('authToken');
+      this.props.setAuthorized(false);
     })
     .catch(err => console.log(err));
   }
