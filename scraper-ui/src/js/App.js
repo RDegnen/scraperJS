@@ -5,6 +5,7 @@ import '../styles/App.css';
 import Login from './components/auth/login';
 import Logout from './components/auth/logout';
 import Authorize from './components/auth/auth';
+import JobListings from './components/listings/jobListings';
 
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
@@ -40,15 +41,20 @@ class App extends Component {
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to ScraperJS</h1>
-            {authorized ? (
-              <Logout setAuthorized={this.setAuthorized}/>
-            ) : (
-              <Route path='/login' component={Login}/>
-            )}
+              <Switch>
+                {authorized ? (
+                  <div>
+                    <Logout setAuthorized={this.setAuthorized}/>
+                  </div>
+                ) : (
+                  <Route path='/login' component={Login}/>
+                )}
+              </Switch>
           </header>
           <div>
             <Switch>
               <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
+              <Route path='/job-listings' component={JobListings}/>
             </Switch>
           </div>
         </div>
