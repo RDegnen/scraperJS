@@ -7,8 +7,10 @@ class JobListings extends Component {
     this.state = {
       jobListings: [],
       filteredListings: [],
+      currentSiteFilter: 'all',
     };
     this.filterListings = this.filterListings.bind(this);
+    this.inputFilter = this.inputFilter.bind(this);
   }
 
   getAllJobListings() {
@@ -32,18 +34,36 @@ class JobListings extends Component {
     this.getAllJobListings();
   }
 
+  inputFilter(e) {
+    e.preventDefault();
+    let matches = this.state.jobListings.filter((item) => {
+      let myRegEx = new RegExp(`^.*${e.target.value}.*$`, 'gi');
+      if (this.state.currentSiteFilter === 'all') {
+        return myRegEx.exec(item.jobTitle.S);
+      } else if (myRegEx.exec(item.jobTitle.S) && item.sourceSite.S === this.state.currentSiteFilter) {
+        return item;
+      }
+    });
+    console.log(matches)
+    this.setState({ filteredListings: matches });
+  }
+
   filterListings(e) {
     e.preventDefault();
+    this.setState({ currentSiteFilter: e.target.value });
     if (e.target.value === 'all') {
       return this.setState({ filteredListings: this.state.jobListings});
     };
-    const result = this.state.jobListings.filter(item => item.sourceSite.S === e.target.value);
+    const result = this.state.filteredListings.filter(item => item.sourceSite.S === e.target.value);
     this.setState({ filteredListings: result });
   }
 
   render() {
     return (
       <div>
+        <div>
+          <input type='text' onChange={this.inputFilter}/>
+        </div>
         <div>
           <ul>
             <li><button value='all' onClick={this.filterListings}>All</button></li>
