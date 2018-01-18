@@ -8,8 +8,9 @@ class JobListings extends Component {
       jobListings: [],
       filteredListings: [],
       currentSiteFilter: 'all',
+      currentInputFilter: [],
     };
-    this.filterListings = this.filterListings.bind(this);
+    this.sourceSiteFilter = this.sourceSiteFilter.bind(this);
     this.inputFilter = this.inputFilter.bind(this);
   }
 
@@ -33,28 +34,37 @@ class JobListings extends Component {
   componentWillMount() {
     this.getAllJobListings();
   }
-
+  // FILTERS: inputFilter is applied first onto this.state.jobListings, and then
+  // sourceSiteFilter is applied onto that. inputFilter will then check if currentSiteFilter
+  // is applied and if so, it will apply that to its full results.
   inputFilter(e) {
     e.preventDefault();
-    let matches = this.state.jobListings.filter((item) => {
+    let allMatches = this.state.jobListings.filter((item) => {
       let myRegEx = new RegExp(`^.*${e.target.value}.*$`, 'gi');
-      if (this.state.currentSiteFilter === 'all') {
         return myRegEx.exec(item.jobTitle.S);
-      } else if (myRegEx.exec(item.jobTitle.S) && item.sourceSite.S === this.state.currentSiteFilter) {
-        return item;
-      }
     });
-    console.log(matches)
-    this.setState({ filteredListings: matches });
+
+    let matches;
+    if (this.state.currentSiteFilter !== 'all') {
+      matches = allMatches.filter((item) => {
+        let myRegEx = new RegExp(`^.*${e.target.value}.*$`, 'gi');
+        if (myRegEx.exec(item.jobTitle.S) && item.sourceSite.S === this.state.currentSiteFilter) {
+          return item;
+        }
+      });
+    }
+
+    this.setState({ currentInputFilter: allMatches });
+    this.setState({ filteredListings: matches || allMatches });
   }
 
-  filterListings(e) {
+  sourceSiteFilter(e) {
     e.preventDefault();
     this.setState({ currentSiteFilter: e.target.value });
     if (e.target.value === 'all') {
-      return this.setState({ filteredListings: this.state.jobListings});
+      return this.setState({ filteredListings: this.state.currentInputFilter});
     };
-    const result = this.state.filteredListings.filter(item => item.sourceSite.S === e.target.value);
+    const result = this.state.currentInputFilter.filter(item => item.sourceSite.S === e.target.value);
     this.setState({ filteredListings: result });
   }
 
@@ -66,9 +76,9 @@ class JobListings extends Component {
         </div>
         <div>
           <ul>
-            <li><button value='all' onClick={this.filterListings}>All</button></li>
-            <li><button value='craigslist' onClick={this.filterListings}>Craigslist</button></li>
-            <li><button id='indeed-filter-btn' value='indeed' onClick={this.filterListings}>Indeed</button></li>
+            <li><button value='all' onClick={this.sourceSiteFilter}>All</button></li>
+            <li><button value='craigslist' onClick={this.sourceSiteFilter}>Craigslist</button></li>
+            <li><button id='indeed-filter-btn' value='indeed' onClick={this.sourceSiteFilter}>Indeed</button></li>
           </ul>
         </div>
         <div>
