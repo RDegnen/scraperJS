@@ -20,6 +20,12 @@ describe('Job listings', () => {
             sourceSite: { S: 'indeed', },
             listingDate: { S: '897877832', },
           },
+          { jobTitle: { S: 'Java Engineer', },
+            link: { S: 'http://nowhere.io', },
+            listingId: { S: '43853475', },
+            sourceSite: { S: 'indeed', },
+            listingDate: { S: '897877832', },
+          },
         ]
       }
       return new Promise((resolve) => {
@@ -38,11 +44,11 @@ describe('Job listings', () => {
   it('renders JobListings without crashing', async () => {
     const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
     await wrapper.instance().getAllJobListings();
-    expect(wrapper.state('jobListings')).toHaveLength(2);
-    expect(wrapper.state('filteredListings')).toHaveLength(2);
+    expect(wrapper.state('jobListings')).toHaveLength(3);
+    expect(wrapper.state('filteredListings')).toHaveLength(3);
   });
 
-  it('filters listings', async () => {
+  it('filters listings by site', async () => {
     const mockEvent = {
       target: { value: 'indeed' },
       preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
@@ -50,6 +56,17 @@ describe('Job listings', () => {
     const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
     await wrapper.instance().getAllJobListings();
     wrapper.find('#indeed-filter-btn').simulate('click', mockEvent);
+    expect(wrapper.state('filteredListings')).toHaveLength(2);
+  });
+
+  it('filters listings by job title', async () => {
+    const mockEvent = {
+      target: { value: 'python' },
+      preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
+    }
+    const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
+    await wrapper.instance().getAllJobListings();
+    wrapper.instance().inputFilter(mockEvent);
     expect(wrapper.state('filteredListings')).toHaveLength(1);
   });
 })

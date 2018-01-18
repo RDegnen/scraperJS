@@ -27,6 +27,7 @@ class JobListings extends Component {
     .then((data) => {
       this.setState({ jobListings: data.Items })
       this.setState({ filteredListings: data.Items })
+      this.setState({ currentInputFilter: data.Items })
     })
     .catch(err => console.log(err));
   }
