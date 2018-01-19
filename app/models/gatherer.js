@@ -70,7 +70,7 @@ const writePageToDynamo = (results, reqBody) => {
     RequestItems[scraped_pages] = paramsArray;
     dynamodb.batchWriteItem({ RequestItems }, (err, data) => {
       if (err) reject(err);
-      resolve('HTML successfully written to Dynamo');
+      resolve(data);
     });
   });
 };
