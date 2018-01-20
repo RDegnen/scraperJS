@@ -73,8 +73,15 @@ const logout = (req, res, next) => {
     .catch(err => next(err));
 };
 
+const validateAuth = (req, res, next) => {
+  // Validates authorization whenever the whole react app re-renders
+  if (req.currentUser) res.status(200).send();
+  else res.status(401).send();
+};
+
 module.exports = {
   login,
   githubAuth,
   logout,
+  validateAuth,
 };

@@ -8,17 +8,17 @@ const User = require('../app/models/user');
 
 chai.use(chaiHttp);
 
-describe('User actions', () => {
-  const userData = {
-    id: '12345679',
-    login: 'TestUser',
-  };
-  const currentUser = {
-    userId: {
-      N: userData.id,
-    },
-  };
+const userData = {
+  id: '12345679',
+  login: 'TestUser',
+};
+const currentUser = {
+  userId: {
+    N: userData.id,
+  },
+};
 
+describe('User actions', () => {
   before(() => {
     User.createUser(userData, process.env.TEST_TOKEN)
       .then(data => console.log(data))
@@ -33,6 +33,21 @@ describe('User actions', () => {
           .then((res) => {
             res.should.have.status(200);
             // res.headers.server.should.equal('GitHub.com');
+            resolve();
+          })
+          .catch(err => reject(err));
+      });
+    });
+  });
+
+  describe('/GET validate', () => {
+    it('should validate auth and respond with 200', () => {
+      return new Promise((resolve, reject) => {
+        chai.request(app)
+          .get('/users/validate')
+          .set('authtoken', process.env.TEST_TOKEN)
+          .then((res) => {
+            res.should.have.status(200);
             resolve();
           })
           .catch(err => reject(err));
