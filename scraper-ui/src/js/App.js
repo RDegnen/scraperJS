@@ -26,17 +26,43 @@ const PropsRoute = ({ component, ...rest }) => {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.setAuthorized = this.setAuthorized.bind(this);
     this.state = { isAuthorized: false };
+    this.setAuthorized = this.setAuthorized.bind(this);
+    this.checkAuthorized = this.checkAuthorized.bind(this);
   }
-  // FIXME: Auth needs to be done via dynamo becaue it gets reset on route changes
+  // Because App remounts when the routes change, have to check
+  // if the user is authorized. Doing it via dynamo.
   setAuthorized(val) {
     this.setState({ isAuthorized: val });
   }
 
+  checkAuthorized() {
+    if (localStorage.getItem('authToken')) {
+      return fetch('users/validate', {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          authtoken: localStorage.getItem('authToken'),
+        },
+      })
+      .then((data) => {
+        this.setAuthorized(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setAuthorized(false);
+      })
+    } else {
+      console.log('No Token, Unauthorized');
+    }
+  }
+
+  componentWillMount() {
+    this.checkAuthorized();
+  }
+
   render() {
     const authorized = this.state.isAuthorized;
-    console.log(authorized)
     return (
       <BrowserRouter>
         <div className="App">
