@@ -44,9 +44,20 @@ const collectHtml = (req) => {
 const writePageToDynamo = (results, reqBody) => {
   return new Promise((resolve, reject) => {
     // Create array of PutRequest params to send to batchWriteItem
+    const date = new Date();
+    const dateString = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
     const paramsArray = [];
+    let count = 0;
     for (let i = 0; i < results.length; i++) {
-      const randomInt = Math.floor(Math.random() * (1 - 1000) + 1);
+      let id = null;
+      // FIXME these id's aren't great right now, will need to update
+      if (reqBody.source === 'craigslist') {
+        id = `craigslist#${count}#${dateString}`;
+        count += 1;
+      } else if (reqBody.source === 'indeed') {
+        const randomInt = Math.floor(Math.random() * (1 - 1000) + 1);
+        id = `indeed#${randomInt}#${dateString}`;
+      }
       const params = {
         PutRequest: {
           Item: {
@@ -57,7 +68,7 @@ const writePageToDynamo = (results, reqBody) => {
               S: reqBody.source,
             },
             pageId: {
-              S: `${reqBody.source}${randomInt}`,
+              S: id,
             },
           },
         },

@@ -9,14 +9,16 @@ class Scraper extends Component {
 
   scrapeCraigslist () {
     const authToken = localStorage.getItem('authToken');
-    return fetch('gather', {
+    return fetch('http://localhost:8080/gather', {
       method: 'POST',
       mode: 'cors',
-      body: {
+      body: JSON.stringify({
         source: 'craigslist',
-      },
+      }),
       headers: {
         authtoken: authToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       },
     })
     .then(res => res.json())

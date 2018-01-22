@@ -42,7 +42,7 @@ const scrapeCraigslist = (data) => {
                 S: 'craigslist',
               },
               listingDate: {
-                S: Date.now().toString(),
+                S: $(elem).find('.result-date').attr('datetime'),
               },
             },
           },
@@ -79,7 +79,7 @@ const scrapeIndeed = (data) => {
                 S: 'indeed',
               },
               listingDate: {
-                S: Date.now().toString(),
+                S: 'NA',
               },
             },
           },
