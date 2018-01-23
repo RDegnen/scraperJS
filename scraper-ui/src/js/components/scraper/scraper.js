@@ -4,11 +4,18 @@ class Scraper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: 'boston'
+      location: 'boston',
+      indeedKeywords: '',
+      indeedPages: 0,
     };
-    this.scrape = this.scrape.bind(this)
+    this.scrapeCraigslist = this.scrapeCraigslist.bind(this)
+    this.scrapeIndeed = this.scrapeIndeed.bind(this)
+
     this.createListings = this.createListings.bind(this)
     this.setLocation = this.setLocation.bind(this)
+
+    this.setIndeedKeywords = this.setIndeedKeywords.bind(this)
+    this.setIndeedPages = this.setIndeedPages.bind(this)
   }
 
   setLocation(e) {
@@ -16,7 +23,17 @@ class Scraper extends Component {
     this.setState({ location: e.target.value })
   }
 
-  scrape(e) {
+  setIndeedKeywords(e) {
+    e.preventDefault();
+    this.setState({ indeedKeywords: e.target.value })
+  }
+
+  setIndeedPages(e) {
+    e.preventDefault();
+    this.setState({ indeedPages: e.target.value })
+  }
+  // FIXME: Maybe put scraping into seperate components?
+  scrapeCraigslist(e) {
     e.preventDefault();
     const source = e.target.value;
     const authToken = localStorage.getItem('authToken');
@@ -41,6 +58,34 @@ class Scraper extends Component {
     .catch(err => console.log(err));
   }
 
+  scrapeIndeed(e) {
+    e.preventDefault();
+    const authToken = localStorage.getItem('authToken');
+    const terms = this.state.indeedKeywords.split(' ');
+    return fetch('http://localhost:8080/gather', {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({
+        source: 'indeed',
+        location: this.state.location,
+        terms: terms,
+        pages: this.state.indeedPages,
+      }),
+      headers: {
+        authtoken: authToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(res => res.json())
+    .then((resp) => {
+      this.createListings('indeed');
+      console.log(resp);
+    })
+    .catch(err => console.log(err));
+  }
+
+
   createListings(source) {
     const authToken = localStorage.getItem('authToken');
     return fetch(`listings/create/${source}`, {
@@ -61,7 +106,24 @@ class Scraper extends Component {
     return (
       <div>
         <input type='text' onChange={this.setLocation} placeholder='boston'/>
-        <button id='scrape-crg-btn' value='craigslist' onClick={this.scrape}>Scrape Craigslist</button>
+        <div>
+          <div>
+            <button id='scrape-crg-btn' value='craigslist' onClick={this.scrapeCraigslist}>Scrape Craigslist</button>
+          </div>
+          <div>
+            <form onSubmit={this.scrapeIndeed}>
+              <label>
+                Keywords:
+                <input type='text' value={this.state.indeedKeywords} onChange={this.setIndeedKeywords}/>
+              </label>
+              <label>
+                Amount of pages:
+                <input type='text' value={this.state.indeedPages} onChange={this.setIndeedPages}/>
+              </label>
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
+        </div>
       </div>
     )
   }

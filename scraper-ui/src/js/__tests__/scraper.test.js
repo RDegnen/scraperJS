@@ -20,12 +20,12 @@ describe('Scraper', () => {
     })
   })
 
-  it('Runs the scraper methods successfully', () => {
+  it('Runs the Craigslist scraper methods successfully', () => {
     const mockEvent = {
       target: { value: 'craigslist' },
       preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
     }
-    const spy = jest.spyOn(Scraper.prototype, 'scrape');
+    const spy = jest.spyOn(Scraper.prototype, 'scrapeCraigslist');
     const wrapper = shallow(<Scraper />);
     wrapper.find('#scrape-crg-btn').simulate('click', mockEvent);
     expect(spy).toHaveBeenCalled();
