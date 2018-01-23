@@ -3,6 +3,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../app');
 const AWS = require('aws-sdk');
+
 const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB();
 const should = chai.should();

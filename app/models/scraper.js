@@ -1,13 +1,14 @@
 const AWS = require('aws-sdk');
 const cheerio = require('cheerio');
-const dynamodb = new AWS.DynamoDB();
 const config = require('config');
+
+const dynamodb = new AWS.DynamoDB();
 
 const getHtml = () => {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: config.SCRAPED_PAGES_TABLE,
-      AttributesToGet: ['html'],
+      AttributesToGet: ['html', 'location'],
     };
     dynamodb.scan(params, (err, data) => {
       if (err) reject(err);
@@ -43,6 +44,9 @@ const scrapeCraigslist = (data) => {
               },
               listingDate: {
                 S: $(elem).find('.result-date').attr('datetime'),
+              },
+              location: {
+                S: items[i].location.S,
               },
             },
           },
@@ -80,6 +84,9 @@ const scrapeIndeed = (data) => {
               },
               listingDate: {
                 S: 'NA',
+              },
+              location: {
+                S: items[i].location.S,
               },
             },
           },

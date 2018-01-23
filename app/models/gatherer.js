@@ -1,15 +1,17 @@
 const AWS = require('aws-sdk');
 const rp = require('request-promise');
-const dynamodb = new AWS.DynamoDB();
 const config = require('config');
+
+const dynamodb = new AWS.DynamoDB();
 
 const collectHtml = (req) => {
   return new Promise((resolve, reject) => {
+    const { body: { location } } = req;
     switch (req.body.source) {
       case 'craigslist': {
-        const rp1 = rp('https://boston.craigslist.org/d/internet-engineering/search/eng');
-        const rp2 = rp('https://boston.craigslist.org/d/software-qa-dba-etc/search/sof');
-        const rp3 = rp('https://boston.craigslist.org/d/web-html-info-design/search/web');
+        const rp1 = rp(`https://${location}.craigslist.org/d/internet-engineering/search/eng`);
+        const rp2 = rp(`https://${location}.craigslist.org/d/software-qa-dba-etc/search/sof`);
+        const rp3 = rp(`https://${location}.craigslist.org/d/web-html-info-design/search/web`);
         // Run all 3 request-promise promises and return array of html results
         Promise.all([rp1, rp2, rp3])
           .then(results => resolve(results))
@@ -24,8 +26,8 @@ const collectHtml = (req) => {
         for (let i = 0; i < terms.length; i++) {
           for (let p = 0; p < req.body.pages; p++) {
             let url;
-            if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=Boston%2C+MA&`;
-            else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=Boston%2C+MA&start=${p * 10}`;
+            if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&`;
+            else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&start=${p * 10}`;
             urls.push(rp(url));
           }
         }
@@ -69,6 +71,9 @@ const writePageToDynamo = (results, reqBody) => {
             },
             pageId: {
               S: id,
+            },
+            location: {
+              S: reqBody.location,
             },
           },
         },

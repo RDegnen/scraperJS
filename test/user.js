@@ -2,9 +2,10 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../app');
+const User = require('../app/models/user');
+
 const should = chai.should();
 const assert = chai.assert;
-const User = require('../app/models/user');
 
 chai.use(chaiHttp);
 
