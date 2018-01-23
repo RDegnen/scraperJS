@@ -3,17 +3,29 @@ import React, { Component } from 'react';
 class Scraper extends Component {
   constructor(props) {
     super(props);
-    this.scrapeCraigslist = this.scrapeCraigslist.bind(this)
+    this.state = {
+      location: 'boston'
+    };
+    this.scrape = this.scrape.bind(this)
     this.createListings = this.createListings.bind(this)
+    this.setLocation = this.setLocation.bind(this)
   }
 
-  scrapeCraigslist () {
+  setLocation(e) {
+    e.preventDefault();
+    this.setState({ location: e.target.value })
+  }
+
+  scrape(e) {
+    e.preventDefault();
+    const source = e.target.value;
     const authToken = localStorage.getItem('authToken');
     return fetch('http://localhost:8080/gather', {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify({
-        source: 'craigslist',
+        source: source,
+        location: this.state.location,
       }),
       headers: {
         authtoken: authToken,
@@ -23,15 +35,15 @@ class Scraper extends Component {
     })
     .then(res => res.json())
     .then((resp) => {
-      this.createListings();
+      this.createListings(source);
       console.log(resp);
     })
     .catch(err => console.log(err));
   }
 
-  createListings() {
+  createListings(source) {
     const authToken = localStorage.getItem('authToken');
-    return fetch('listings/create/craigslist', {
+    return fetch(`listings/create/${source}`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -48,7 +60,8 @@ class Scraper extends Component {
   render() {
     return (
       <div>
-        <button id='scrape-crg-btn' onClick={this.scrapeCraigslist}>Scrape Craigslist</button>
+        <input type='text' onChange={this.setLocation} placeholder='boston'/>
+        <button id='scrape-crg-btn' value='craigslist' onClick={this.scrape}>Scrape Craigslist</button>
       </div>
     )
   }

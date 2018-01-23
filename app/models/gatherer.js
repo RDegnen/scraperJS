@@ -6,9 +6,10 @@ const dynamodb = new AWS.DynamoDB();
 
 const collectHtml = (req) => {
   return new Promise((resolve, reject) => {
-    const { body: { location } } = req;
+    let { body: { location } } = req;
     switch (req.body.source) {
       case 'craigslist': {
+        location = location.split(' ').join('');
         const rp1 = rp(`https://${location}.craigslist.org/d/internet-engineering/search/eng`);
         const rp2 = rp(`https://${location}.craigslist.org/d/software-qa-dba-etc/search/sof`);
         const rp3 = rp(`https://${location}.craigslist.org/d/web-html-info-design/search/web`);
@@ -54,7 +55,7 @@ const writePageToDynamo = (results, reqBody) => {
       let id = null;
       // FIXME these id's aren't great right now, will need to update
       if (reqBody.source === 'craigslist') {
-        id = `craigslist#${count}#${dateString}`;
+        id = `craigslist#${reqBody.location}#${count}#${dateString}`;
         count += 1;
       } else if (reqBody.source === 'indeed') {
         const randomInt = Math.floor(Math.random() * (1 - 1000) + 1);
