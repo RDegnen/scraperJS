@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB();
 const config = require('config');
+
+const dynamodb = new AWS.DynamoDB();
 
 const authenticate = (req, res, next) => {
   // Make sure that the token being sent with the request is valid for a user

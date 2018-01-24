@@ -67,7 +67,6 @@ class App extends Component {
       <BrowserRouter>
         <div className="App">
           <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to ScraperJS</h1>
                 {authorized ? (
                   <div>
