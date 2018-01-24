@@ -6,7 +6,7 @@ const dynamodb = new AWS.DynamoDB();
 
 const collectHtml = (req) => {
   return new Promise((resolve, reject) => {
-    let { body: { location } } = req;
+    let { location } = req.body;
     switch (req.body.source) {
       case 'craigslist': {
         location = location.split(' ').join('');
@@ -94,7 +94,7 @@ const writePageToDynamo = (results, reqBody) => {
 
 const getScrapedPages = (req) => {
   return new Promise((resolve, reject) => {
-    const source = req.params.source;
+    const { source } = req.params;
     if (source === 'all') {
       const params = {
         TableName: config.SCRAPED_PAGES_TABLE,
