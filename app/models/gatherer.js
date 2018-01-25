@@ -13,7 +13,6 @@ const writePageToDynamo = (results, reqBody) => {
     let count = 0;
     for (let i = 0; i < results.length; i++) {
       let id = null;
-      // FIXME these id's aren't great right now, will need to update
       if (reqBody.source === 'craigslist') {
         id = `craigslist#${reqBody.location}#${count}#${dateString}`;
         count += 1;

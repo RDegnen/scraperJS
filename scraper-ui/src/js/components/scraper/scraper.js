@@ -81,10 +81,7 @@ class Scraper extends Component {
         <input type='text' onChange={this.setLocation} placeholder='boston'/>
         <div>
           <div>
-            <button id='scrape-crg-btn' value='craigslist' onClick={this.setBodyandScrape}>Scrape Craigslist</button>
-          </div>
-          <div>
-            <form onSubmit={this.scrape}>
+            <form id='scraper-form' onSubmit={this.scrape}>
               <label>
                 Keywords:
                 <input type='text' value={this.state.keywords} onChange={this.setKeywords}/>

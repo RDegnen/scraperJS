@@ -25,9 +25,9 @@ describe('Scraper', () => {
       target: { value: 'craigslist' },
       preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
     }
-    const spy = jest.spyOn(Scraper.prototype, 'scrapeCraigslist');
+    const spy = jest.spyOn(Scraper.prototype, 'scrape');
     const wrapper = shallow(<Scraper />);
-    wrapper.find('#scrape-crg-btn').simulate('click', mockEvent);
+    wrapper.find('#scraper-form').simulate('submit', mockEvent);
     expect(spy).toHaveBeenCalled();
   })
 })
