@@ -5,20 +5,16 @@ class Scraper extends Component {
     super(props);
     this.state = {
       location: 'boston',
-      indeedKeywords: '',
-      indeedPages: 0,
-      body: {},
+      keywords: '',
+      pages: 1,
     };
-    // this.scrapeCraigslist = this.scrapeCraigslist.bind(this)
-    // this.scrapeIndeed = this.scrapeIndeed.bind(this)
     this.scrape = this.scrape.bind(this)
 
     this.createListings = this.createListings.bind(this)
     this.setLocation = this.setLocation.bind(this)
 
-    this.setIndeedKeywords = this.setIndeedKeywords.bind(this)
-    this.setIndeedPages = this.setIndeedPages.bind(this)
-    this.setBodyandScrape = this.setBodyandScrape.bind(this)
+    this.setKeywords = this.setKeywords.bind(this)
+    this.setPages = this.setPages.bind(this)
   }
 
   setLocation(e) {
@@ -26,86 +22,29 @@ class Scraper extends Component {
     this.setState({ location: e.target.value })
   }
 
-  setIndeedKeywords(e) {
+  setKeywords(e) {
     e.preventDefault();
-    this.setState({ indeedKeywords: e.target.value })
+    this.setState({ keywords: e.target.value })
   }
 
-  setIndeedPages(e) {
+  setPages(e) {
     e.preventDefault();
-    this.setState({ indeedPages: e.target.value })
+    this.setState({ pages: e.target.value })
   }
 
-  setBodyandScrape(e) {
+  scrape(e) {
     e.preventDefault()
-    this.setState({ body: {
+    const body = {
       source: 'all',
       location: this.state.location,
-      terms: this.state.indeedKeywords.split(' '),
-      pages: this.state.indeedPages,
-    }})
-    console.log(this.state.body)
-    // this.scrape();
-  }
-  // FIXME: Maybe put scraping into seperate components?
-  // scrapeCraigslist(e) {
-  //   e.preventDefault();
-  //   const source = e.target.value;
-  //   const authToken = localStorage.getItem('authToken');
-  //   return fetch('http://localhost:8080/gather', {
-  //     method: 'POST',
-  //     mode: 'cors',
-  //     body: JSON.stringify({
-  //       source: source,
-  //       location: this.state.location,
-  //     }),
-  //     headers: {
-  //       authtoken: authToken,
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //   })
-  //   .then(res => res.json())
-  //   .then((resp) => {
-  //     this.createListings(source);
-  //     console.log(resp);
-  //   })
-  //   .catch(err => console.log(err));
-  // }
-  //
-  // scrapeIndeed(e) {
-  //   e.preventDefault();
-  //   const authToken = localStorage.getItem('authToken');
-  //   const terms = this.state.indeedKeywords.split(' ');
-  //   return fetch('http://localhost:8080/gather', {
-  //     method: 'POST',
-  //     mode: 'cors',
-  //     body: JSON.stringify({
-  //       source: 'indeed',
-  //       location: this.state.location,
-  //       terms: terms,
-  //       pages: this.state.indeedPages,
-  //     }),
-  //     headers: {
-  //       authtoken: authToken,
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //   })
-  //   .then(res => res.json())
-  //   .then((resp) => {
-  //     this.createListings('indeed');
-  //     console.log(resp);
-  //   })
-  //   .catch(err => console.log(err));
-  // }
-
-  scrape() {
+      terms: [this.state.keywords],
+      pages: this.state.pages,
+    }
     const authToken = localStorage.getItem('authToken');
     return fetch('http://localhost:8080/gather', {
       method: 'POST',
       mode: 'cors',
-      body: JSON.stringify(this.state.body),
+      body: JSON.stringify(body),
       headers: {
         authtoken: authToken,
         'Accept': 'application/json',
@@ -145,14 +84,14 @@ class Scraper extends Component {
             <button id='scrape-crg-btn' value='craigslist' onClick={this.setBodyandScrape}>Scrape Craigslist</button>
           </div>
           <div>
-            <form onSubmit={this.setBodyandScrape}>
+            <form onSubmit={this.scrape}>
               <label>
                 Keywords:
-                <input type='text' value={this.state.indeedKeywords} onChange={this.setIndeedKeywords}/>
+                <input type='text' value={this.state.keywords} onChange={this.setKeywords}/>
               </label>
               <label>
                 Amount of pages:
-                <input type='text' value={this.state.indeedPages} onChange={this.setIndeedPages}/>
+                <input type='text' value={this.state.pages} onChange={this.setPages}/>
               </label>
               <input type="submit" value="Submit" />
             </form>

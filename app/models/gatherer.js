@@ -18,8 +18,8 @@ const writePageToDynamo = (results, reqBody) => {
         id = `craigslist#${reqBody.location}#${count}#${dateString}`;
         count += 1;
       } else if (reqBody.source === 'indeed') {
-        const randomInt = Math.floor(Math.random() * (1 - 1000) + 1);
-        id = `indeed#${reqBody.location}#${randomInt}#${dateString}`;
+        id = `indeed#${reqBody.location}#${reqBody.terms}#${count}#${dateString}`;
+        count += 1;
       }
       const params = {
         PutRequest: {
@@ -73,16 +73,17 @@ const collectIndeedHtml = (req) => {
   return new Promise((resolve, reject) => {
     let { location } = req.body;
     if (location.split(' ').length > 1) location = location.split(' ').join('+');
-    const newBody = { location, source: 'indeed' };
-    // Add + between terms for indeed search. Then loop over terms and within that loop
-    // over pages so there is the specified amount of pages for each term.
     const urls = [];
     const terms = req.body.terms.map(t => t.split(' ').join('+'));
+    const newBody = { location, terms, source: 'indeed' };
+    // Add + between terms for indeed search. Then loop over terms and within that loop
+    // over pages so there is the specified amount of pages for each term.
+    if (req.body.pages < 1) req.body.pages = 1;
     for (let i = 0; i < terms.length; i++) {
       for (let p = 0; p < req.body.pages; p++) {
         let url;
-        if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&`;
-        else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&start=${p * 10}`;
+        if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}`;
+        else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}&start=${p * 10}`;
         urls.push(rp(url));
       }
     }
