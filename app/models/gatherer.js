@@ -4,49 +4,8 @@ const config = require('config');
 
 const dynamodb = new AWS.DynamoDB();
 
-// const collectHtml = (req) => {
-//   return new Promise((resolve, reject) => {
-//     let { location } = req.body;
-//     switch (req.body.source) {
-//       case 'craigslist': {
-//         location = location.split(' ').join('');
-//         const rp1 = rp(`https://${location}.craigslist.org/d/internet-engineering/search/eng`);
-//         const rp2 = rp(`https://${location}.craigslist.org/d/software-qa-dba-etc/search/sof`);
-//         const rp3 = rp(`https://${location}.craigslist.org/d/web-html-info-design/search/web`);
-//         // Run all 3 request-promise promises and return array of html results
-//         Promise.all([rp1, rp2, rp3])
-//           .then(results => resolve(results))
-//           .catch(err => reject(err));
-//         break;
-//       }
-//       case 'indeed': {
-//         // Add + between terms for indeed search. Then loop over terms and within that loop
-//         // over pages so there is the specified amount of pages for each term.
-//         const urls = [];
-//         const terms = req.body.terms.map(t => t.split(' ').join('+'));
-//         for (let i = 0; i < terms.length; i++) {
-//           for (let p = 0; p < req.body.pages; p++) {
-//             let url;
-//             if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&`;
-//             else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&start=${p * 10}`;
-//             urls.push(rp(url));
-//           }
-//         }
-//         Promise.all(urls)
-//           .then(results => resolve(results))
-//           .catch(err => reject(err));
-//         break;
-//       }
-//       default: {
-//         break;
-//       }
-//     }
-//   });
-// };
-
 const writePageToDynamo = (results, reqBody) => {
   return new Promise((resolve, reject) => {
-    console.log('DYNAMO', reqBody)
     // Create array of PutRequest params to send to batchWriteItem
     const date = new Date();
     const dateString = `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
@@ -97,16 +56,14 @@ const collectCraigslistHtml = (req) => {
   return new Promise((resolve, reject) => {
     let { location } = req.body;
     location = location.split(' ').join('');
-    req.body.source = 'craigslist';
-    req.body.location = location;
+    const newBody = { location, source: 'craigslist' };
 
     const rp1 = rp(`https://${location}.craigslist.org/d/internet-engineering/search/eng`);
     const rp2 = rp(`https://${location}.craigslist.org/d/software-qa-dba-etc/search/sof`);
     const rp3 = rp(`https://${location}.craigslist.org/d/web-html-info-design/search/web`);
     // Run all 3 request-promise promises and return array of html results
-    console.log('CRAIGSLIST', req.body)
     Promise.all([rp1, rp2, rp3])
-      // .then(results => writePageToDynamo(results, req.body))
+      .then(results => writePageToDynamo(results, newBody))
       .then(resp => resolve(resp))
       .catch(err => reject(err));
   });
@@ -116,8 +73,7 @@ const collectIndeedHtml = (req) => {
   return new Promise((resolve, reject) => {
     let { location } = req.body;
     if (location.split(' ').length > 1) location = location.split(' ').join('+');
-    req.body.source = 'indeed';
-    req.body.location = location;
+    const newBody = { location, source: 'indeed' };
     // Add + between terms for indeed search. Then loop over terms and within that loop
     // over pages so there is the specified amount of pages for each term.
     const urls = [];
@@ -130,9 +86,8 @@ const collectIndeedHtml = (req) => {
         urls.push(rp(url));
       }
     }
-    console.log('INDEED', req.body)
     Promise.all(urls)
-      // .then(results => writePageToDynamo(results, req.body))
+      .then(results => writePageToDynamo(results, newBody))
       .then(resp => resolve(resp))
       .catch(err => reject(err));
   });
@@ -181,10 +136,9 @@ const deleteScrapedPages = (data) => {
 };
 
 module.exports = {
-  // collectHtml,
+  writePageToDynamo,
   collectCraigslistHtml,
   collectIndeedHtml,
-  writePageToDynamo,
   getScrapedPages,
   deleteScrapedPages,
 };
