@@ -4,46 +4,6 @@ const config = require('config');
 
 const dynamodb = new AWS.DynamoDB();
 
-const collectHtml = (req) => {
-  return new Promise((resolve, reject) => {
-    let { body: { location } } = req;
-    switch (req.body.source) {
-      case 'craigslist': {
-        location = location.split(' ').join('');
-        const rp1 = rp(`https://${location}.craigslist.org/d/internet-engineering/search/eng`);
-        const rp2 = rp(`https://${location}.craigslist.org/d/software-qa-dba-etc/search/sof`);
-        const rp3 = rp(`https://${location}.craigslist.org/d/web-html-info-design/search/web`);
-        // Run all 3 request-promise promises and return array of html results
-        Promise.all([rp1, rp2, rp3])
-          .then(results => resolve(results))
-          .catch(err => reject(err));
-        break;
-      }
-      case 'indeed': {
-        // Add + between terms for indeed search. Then loop over terms and within that loop
-        // over pages so there is the specified amount of pages for each term.
-        const urls = [];
-        const terms = req.body.terms.map(t => t.split(' ').join('+'));
-        for (let i = 0; i < terms.length; i++) {
-          for (let p = 0; p < req.body.pages; p++) {
-            let url;
-            if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&`;
-            else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}%2C+MA&start=${p * 10}`;
-            urls.push(rp(url));
-          }
-        }
-        Promise.all(urls)
-          .then(results => resolve(results))
-          .catch(err => reject(err));
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  });
-};
-
 const writePageToDynamo = (results, reqBody) => {
   return new Promise((resolve, reject) => {
     // Create array of PutRequest params to send to batchWriteItem
@@ -58,8 +18,8 @@ const writePageToDynamo = (results, reqBody) => {
         id = `craigslist#${reqBody.location}#${count}#${dateString}`;
         count += 1;
       } else if (reqBody.source === 'indeed') {
-        const randomInt = Math.floor(Math.random() * (1 - 1000) + 1);
-        id = `indeed#${randomInt}#${dateString}`;
+        id = `indeed#${reqBody.location}#${reqBody.terms}#${count}#${dateString}`;
+        count += 1;
       }
       const params = {
         PutRequest: {
@@ -92,9 +52,51 @@ const writePageToDynamo = (results, reqBody) => {
   });
 };
 
+const collectCraigslistHtml = (req) => {
+  return new Promise((resolve, reject) => {
+    let { location } = req.body;
+    location = location.split(' ').join('');
+    const newBody = { location, source: 'craigslist' };
+
+    const rp1 = rp(`https://${location}.craigslist.org/d/internet-engineering/search/eng`);
+    const rp2 = rp(`https://${location}.craigslist.org/d/software-qa-dba-etc/search/sof`);
+    const rp3 = rp(`https://${location}.craigslist.org/d/web-html-info-design/search/web`);
+    // Run all 3 request-promise promises and return array of html results
+    Promise.all([rp1, rp2, rp3])
+      .then(results => writePageToDynamo(results, newBody))
+      .then(resp => resolve(resp))
+      .catch(err => reject(err));
+  });
+};
+
+const collectIndeedHtml = (req) => {
+  return new Promise((resolve, reject) => {
+    let { location } = req.body;
+    if (location.split(' ').length > 1) location = location.split(' ').join('+');
+    const urls = [];
+    const terms = req.body.terms.map(t => t.split(' ').join('+'));
+    const newBody = { location, terms, source: 'indeed' };
+    // Add + between terms for indeed search. Then loop over terms and within that loop
+    // over pages so there is the specified amount of pages for each term.
+    if (req.body.pages < 1) req.body.pages = 1;
+    for (let i = 0; i < terms.length; i++) {
+      for (let p = 0; p < req.body.pages; p++) {
+        let url;
+        if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}`;
+        else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}&start=${p * 10}`;
+        urls.push(rp(url));
+      }
+    }
+    Promise.all(urls)
+      .then(results => writePageToDynamo(results, newBody))
+      .then(resp => resolve(resp))
+      .catch(err => reject(err));
+  });
+};
+
 const getScrapedPages = (req) => {
   return new Promise((resolve, reject) => {
-    const source = req.params.source;
+    const { source } = req.params;
     if (source === 'all') {
       const params = {
         TableName: config.SCRAPED_PAGES_TABLE,
@@ -135,8 +137,9 @@ const deleteScrapedPages = (data) => {
 };
 
 module.exports = {
-  collectHtml,
   writePageToDynamo,
+  collectCraigslistHtml,
+  collectIndeedHtml,
   getScrapedPages,
   deleteScrapedPages,
 };

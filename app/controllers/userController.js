@@ -42,7 +42,7 @@ const login = (req, res, next) => {
 
 const githubAuth = (req, res, next) => {
   const { authUrl } = req.body;
-  const query = url.parse(authUrl, true).query;
+  const { query } = url.parse(authUrl, true);
   if (query.state === githubConfig.state) {
     const payload = {
       code: query.code,

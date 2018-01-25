@@ -4,7 +4,7 @@ const config = require('config');
 
 const getMultipleListings = (req) => {
   return new Promise((resolve, reject) => {
-    const source = req.params.source;
+    const { source } = req.params;
     let params;
     if (source === 'all') {
       params = {
