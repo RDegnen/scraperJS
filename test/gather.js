@@ -9,7 +9,7 @@ const gatheringController = require('../app/controllers/gatheringController');
 
 const sinonTest = sinonTestFactory(sinon);
 const should = chai.should();
-const { expect } = chai;
+const { expect, assert } = chai;
 
 /* eslint func-names: ["error", "never"] */
 
@@ -38,22 +38,29 @@ describe('Gathering HTML', () => {
       sinon.assert.calledWith(collectCraigslistHtmlSpy, fakeReq);
       sinon.assert.calledWith(collectIndeedHtmlSpy, fakeReq);
     }));
-    // FIXME not sure how to test the calling of dynamo
-    it('should call writePageToDynamo with proper params', sinonTest(function () {
-      // const html = `<html>
-      //   <div>
-      //     <p> fake html </p>
-      //   </div>
-      // </html>`;
-      // const params = { location: 'new+york', source: 'indeed' };
-      const writeToDynamoStub = this.stub(Gatherer, 'writePageToDynamo');
-      const collectIndeedSpy = this.spy(Gatherer, 'collectIndeedHtml');
-      // writeToDynamoStub([html], params);
-      collectIndeedSpy(fakeReq)
-        .then((res) => {
-          expect(res).to.eql({ UnprocessedItems: {} });
-        })
-        .catch(err => console.log(err));
+    // FIXME not sure how to test the calling of dynamo, came up with just faking,
+    // the first part of the indeed logic to avoid the actual scraping.
+    it('write proper params to dynamo', sinonTest(function () {
+      const html = `<html>
+        <div>
+          <p> fake html </p>
+        </div>
+      </html>`;
+      const expectedParams = { location: 'new+york', terms: ['front+end'], source: 'indeed' };
+      const writeToDynamoSpy = this.spy(Gatherer, 'writePageToDynamo');
+      const collectIndeedStub = this.stub(Gatherer, 'collectIndeedHtml').callsFake((req) => {
+        let { location } = req.body;
+        if (location.split(' ').length > 1) location = location.split(' ').join('+');
+        const terms = req.body.terms.map(t => t.split(' ').join('+'));
+        const newBody = { location, terms, source: 'indeed' };
+        return Gatherer.writePageToDynamo([html], newBody);
+      });
+
+      Gatherer.collectIndeedHtml(fakeReq);
+
+      sinon.assert.calledWith(collectIndeedStub, fakeReq);
+      sinon.assert.calledWith(writeToDynamoSpy, [html], expectedParams);
+      assert(true, writeToDynamoSpy.returned({ UnprocessedItems: {} }));
     }));
   });
 });
