@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 class Authorize extends Component {
+  // The Redirect from Github is sent here and then when the component mounts
+  // it sends the url to the backend to create the token
   authorizeGithub(authUrl) {
     let data = { authUrl: authUrl }
     return fetch('/users/auth', {
@@ -15,6 +17,7 @@ class Authorize extends Component {
     .then((data) => {
       localStorage.setItem('authToken', data.authToken);
       this.props.setAuthorized(true);
+      window.location.assign('/job-listings');
     })
     .catch(err => console.log(err));
   }
@@ -24,7 +27,7 @@ class Authorize extends Component {
 
   render() {
     return (
-      <h2 className='h2-auth'>Authorized</h2>
+      <h2 className='h2-auth'>Authorizing...</h2>
     );
   }
 }

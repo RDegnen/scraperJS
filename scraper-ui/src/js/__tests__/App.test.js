@@ -29,12 +29,12 @@ describe('Checking App state', () => {
      search: 'auth?code=testcode&state=teststate',
   };
 
-  it('updates isAuthorized state', async () => {
-    const appWrapper = shallow(<App />);
-    const spy = jest.spyOn(appWrapper.instance(), 'setAuthorized')
-    const authWrapper = shallow(<Authorize location={ properties } setAuthorized={ spy }/>, { disableLifecycleMethods: true });
-    await authWrapper.instance().authorizeGithub(properties.search);
-    expect(spy).toHaveBeenCalled();
-    expect(appWrapper.state('isAuthorized')).toBe(true);
-  });
+  // it('updates isAuthorized state', async () => {
+  //   const appWrapper = shallow(<App />);
+  //   const spy = jest.spyOn(appWrapper.instance(), 'setAuthorized')
+  //   const authWrapper = shallow(<Authorize location={ properties } setAuthorized={ spy }/>, { disableLifecycleMethods: true });
+  //   await authWrapper.instance().authorizeGithub(properties.search);
+  //   expect(spy).toHaveBeenCalled();
+  //   expect(appWrapper.state('isAuthorized')).toBe(true);
+  // });
 })

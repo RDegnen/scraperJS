@@ -1,14 +1,12 @@
 process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const app = require('../app');
 const sinon = require('sinon');
 const sinonTestFactory = require('sinon-test');
 const Gatherer = require('../app/models/gatherer');
 const gatheringController = require('../app/controllers/gatheringController');
 
 const sinonTest = sinonTestFactory(sinon);
-const should = chai.should();
 const { expect, assert } = chai;
 
 /* eslint func-names: ["error", "never"] */
@@ -29,7 +27,7 @@ describe('Gathering HTML', () => {
     return 'Fake Error';
   };
 
-  describe('Gathering all', () => {
+  describe('Gathering', () => {
     it('should call gathering functions for all sites', sinonTest(function () {
       const collectCraigslistHtmlSpy = this.stub(Gatherer, 'collectCraigslistHtml');
       const collectIndeedHtmlSpy = this.stub(Gatherer, 'collectIndeedHtml');

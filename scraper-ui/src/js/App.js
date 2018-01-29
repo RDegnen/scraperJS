@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import logo from '../logo.svg';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import '../styles/App.css';
 import Login from './components/auth/login';
 import Logout from './components/auth/logout';
@@ -26,16 +25,32 @@ const PropsRoute = ({ component, ...rest }) => {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { isAuthorized: false };
+    this.state = { isAuthorized: this.checkAuthorized() };
     this.setAuthorized = this.setAuthorized.bind(this);
     this.checkAuthorized = this.checkAuthorized.bind(this);
+    this.PrivateRoute = this.PrivateRoute.bind(this);
   }
-  // Because App remounts when the routes change, have to check
-  // if the user is authorized. Doing it via dynamo.
+
   setAuthorized(val) {
     this.setState({ isAuthorized: val });
   }
 
+  PrivateRoute({ component, redirectTo, ...rest }) {
+    console.log(this.state.isAuthorized)
+    return (
+      <Route {...rest} render={routeProps => {
+        return this.state.isAuthorized ? (
+          renderMergedProps(component, routeProps, rest)
+        ) : (
+          <Redirect to={{
+            pathname: redirectTo,
+            state: { from: routeProps.location }
+          }}/>
+        );
+      }}/>
+    );
+  };
+  // Not using a data store so checking this whenever the component mounts
   checkAuthorized() {
     if (localStorage.getItem('authToken')) {
       return fetch('users/validate', {
@@ -46,19 +61,15 @@ class App extends Component {
         },
       })
       .then((data) => {
-        this.setAuthorized(true);
+        return true;
       })
       .catch((err) => {
         console.log(err);
-        this.setAuthorized(false);
+        return false;
       })
     } else {
       console.log('No Token, Unauthorized');
     }
-  }
-
-  componentWillMount() {
-    this.checkAuthorized();
   }
 
   render() {
@@ -80,7 +91,7 @@ class App extends Component {
             <div>
               <Switch>
                 <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
-                <Route path='/job-listings' component={JobListings}/>
+                <this.PrivateRoute path='/job-listings' component={JobListings} redirectTo='/login'/>
               </Switch>
             </div>
         </div>
