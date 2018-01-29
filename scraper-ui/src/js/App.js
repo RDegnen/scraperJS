@@ -6,6 +6,11 @@ import Logout from './components/auth/logout';
 import Authorize from './components/auth/auth';
 import JobListings from './components/listings/jobListings';
 import Scraper from './components/scraper/scraper';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import Paper from 'material-ui/Paper';
+import Grid from 'material-ui/Grid';
+import styles from './appStyle'
 
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
@@ -73,31 +78,38 @@ class App extends Component {
   }
 
   render() {
-    const authorized = this.state.isAuthorized;
+    const { isAuthorized } = this.state;
+    const { classes } = this.props;
     return (
       <BrowserRouter>
-        <div className="App">
-          <header className="App-header">
-            <h1 className="App-title">Welcome to ScraperJS</h1>
-                {authorized ? (
-                  <div>
-                    <Logout setAuthorized={this.setAuthorized}/>
-                    <Scraper />
-                  </div>
-                ) : (
-                  <Login />
-                )}
-          </header>
-            <div>
+        <div className={classes.root}>
+          <Grid container alignItems={'stretch'} direction={'row-reverse'} justify={'center'} spacing={24}>
+            <Grid item xs={12} sm={3} className={classes.nav}>
+              <h1 className="App-title">ScraperJS</h1>
+                  {isAuthorized ? (
+                    <div>
+                      <Logout setAuthorized={this.setAuthorized}/>
+                      <Scraper />
+                    </div>
+                  ) : (
+                    <Login />
+                  )}
+            </Grid>
+            <Grid item xs={12} sm={9} className={classes.paper}>
               <Switch>
                 <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
                 <this.PrivateRoute path='/job-listings' component={JobListings} redirectTo='/login'/>
               </Switch>
-            </div>
+            </Grid>
+          </Grid>
         </div>
       </BrowserRouter>
     );
   }
 }
 
-export default App;
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(App);
