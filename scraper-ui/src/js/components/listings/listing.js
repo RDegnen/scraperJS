@@ -1,6 +1,8 @@
 import React from 'react';
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Button from 'material-ui/Button';
+import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import styles from './listingsStyle';
@@ -9,11 +11,17 @@ function Listing(props) {
   const { classes } = props;
   return (
     <Grid item xs={12} sm={6}>
-      <Paper elevation={4} className={classes.paper}>
-        <h4>{props.listing.jobTitle.S}</h4>
-        <a href={props.listing.link.S}>{props.listing.link.S}</a>
-        <h4>{props.listing.sourceSite.S}</h4>
-      </Paper>
+      <Card>
+        <CardContent className={classes.cardContent}>
+          <Typography align='left' type='title'>{props.listing.jobTitle.S}</Typography>
+          <Typography align='left' type='subheading'>{props.listing.sourceSite.S}</Typography>
+          <CardActions>
+            <Button raised href={props.listing.link.S} size='small' color='primary'>
+              Link
+            </Button>
+          </CardActions>
+        </CardContent>
+      </Card>
     </Grid>
   )
 }

@@ -1,7 +1,5 @@
 const styles = theme => ({
-  paper: {
-    padding: 18,
-    textAlign: 'left',
+  cardContent: {
     color: theme.palette.text.secondary,
   },
   listingsContainer: {

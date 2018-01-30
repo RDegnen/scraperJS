@@ -8,7 +8,6 @@ import JobListings from './components/listings/jobListings';
 import Scraper from './components/scraper/scraper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import styles from './appStyle'
 

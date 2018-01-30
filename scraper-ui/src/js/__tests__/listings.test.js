@@ -51,14 +51,10 @@ describe('Job listings', () => {
   });
 
   it('filters listings by site', async () => {
-    const mockEvent = {
-      target: { value: 'indeed' },
-      preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
-    }
     const wrapper = mount(<JobListings />, { disableLifecycleMethods: true });
     const componentWrapper = wrapper.find('JobListings').instance();
     await componentWrapper.getAllJobListings();
-    wrapper.find('#indeed-filter-btn').simulate('click', mockEvent);
+    componentWrapper.sourceSiteFilter('indeed');
     expect(componentWrapper.state.filteredListings.length).toBe(2);
   });
 
