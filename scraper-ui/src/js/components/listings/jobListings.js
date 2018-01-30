@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
 import Listing from './listing';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
+import Toolbar from 'material-ui/Toolbar';
+import Button from 'material-ui/Button';
+import Input, { InputLabel }from 'material-ui/Input';
+import Typography from 'material-ui/Typography';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import styles from './listingsStyle';
 
 class JobListings extends Component {
   constructor(props) {
@@ -59,37 +68,43 @@ class JobListings extends Component {
     this.setState({ filteredListings: matches || allMatches });
   }
 
-  sourceSiteFilter(e) {
-    e.preventDefault();
-    this.setState({ currentSiteFilter: e.target.value });
-    if (e.target.value === 'all') {
+  sourceSiteFilter(val) {
+    this.setState({ currentSiteFilter: val });
+    if (val === 'all') {
       return this.setState({ filteredListings: this.state.currentInputFilter});
     };
-    const result = this.state.currentInputFilter.filter(item => item.sourceSite.S === e.target.value);
+    const result = this.state.currentInputFilter.filter(item => item.sourceSite.S === val);
     this.setState({ filteredListings: result });
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <div>
-          <input type='text' onChange={this.inputFilter}/>
-        </div>
-        <div>
-          <ul>
-            <li><button value='all' onClick={this.sourceSiteFilter}>All</button></li>
-            <li><button value='craigslist' onClick={this.sourceSiteFilter}>Craigslist</button></li>
-            <li><button id='indeed-filter-btn' value='indeed' onClick={this.sourceSiteFilter}>Indeed</button></li>
-          </ul>
-        </div>
-        <div>
+        <Toolbar>
+          <FormControl>
+            <InputLabel htmlFor="jobTitleSearch">Search Job Title</InputLabel>
+            <Input id='jobTitleSearch' placeholder='Search' onChange={this.inputFilter}/>
+          </FormControl>
+          <div className={classes.filterOptions}>
+            <Typography type='button' className={classes.filterHeader}>Filters:</Typography>
+            <Button onClick={this.sourceSiteFilter.bind(this, 'all')}>All</Button>
+            <Button onClick={this.sourceSiteFilter.bind(this, 'craigslist')}>Craigslist</Button>
+            <Button id='indeed-filter-btn' onClick={this.sourceSiteFilter.bind(this, 'indeed')}>Indeed</Button>
+          </div>
+        </Toolbar>
+        <Grid container className={classes.listingsContainer} alignItems={'center'} direction={'row'} justify={'center'} spacing={16}>
           {this.state.filteredListings.map((item) => {
             return <Listing listing={item} key={item.listingId.S}/>
           })}
-        </div>
+        </Grid>
       </div>
     )
   }
 };
 
-export default JobListings;
+JobListings.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(JobListings);

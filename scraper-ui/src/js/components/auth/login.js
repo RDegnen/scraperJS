@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from 'material-ui/Button';
 
 class Login extends Component {
   login() {
@@ -15,7 +16,7 @@ class Login extends Component {
 
   render() {
     return (
-      <button id='github-auth-btn' onClick={this.login}>Github</button>
+      <Button raised id='github-auth-btn' color="primary" onClick={this.login}>Login via Github</Button>
     );
   }
 }

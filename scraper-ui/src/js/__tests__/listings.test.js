@@ -40,23 +40,22 @@ describe('Job listings', () => {
       })
     });
   });
-
+  // Have to call mount and get the child component because of material-ui's
+  // withStyles
   it('renders JobListings without crashing', async () => {
-    const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
-    await wrapper.instance().getAllJobListings();
-    expect(wrapper.state('jobListings')).toHaveLength(3);
-    expect(wrapper.state('filteredListings')).toHaveLength(3);
+    const wrapper = mount(<JobListings />, { disableLifecycleMethods: true });
+    const componentWrapper = wrapper.find('JobListings').instance();
+    await componentWrapper.getAllJobListings();
+    expect(componentWrapper.state.jobListings.length).toBe(3);
+    expect(componentWrapper.state.filteredListings.length).toBe(3);
   });
 
   it('filters listings by site', async () => {
-    const mockEvent = {
-      target: { value: 'indeed' },
-      preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
-    }
-    const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
-    await wrapper.instance().getAllJobListings();
-    wrapper.find('#indeed-filter-btn').simulate('click', mockEvent);
-    expect(wrapper.state('filteredListings')).toHaveLength(2);
+    const wrapper = mount(<JobListings />, { disableLifecycleMethods: true });
+    const componentWrapper = wrapper.find('JobListings').instance();
+    await componentWrapper.getAllJobListings();
+    componentWrapper.sourceSiteFilter('indeed');
+    expect(componentWrapper.state.filteredListings.length).toBe(2);
   });
 
   it('filters listings by job title', async () => {
@@ -64,9 +63,10 @@ describe('Job listings', () => {
       target: { value: 'python' },
       preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
     }
-    const wrapper = shallow(<JobListings />, { disableLifecycleMethods: true });
-    await wrapper.instance().getAllJobListings();
-    wrapper.instance().inputFilter(mockEvent);
-    expect(wrapper.state('filteredListings')).toHaveLength(1);
+    const wrapper = mount(<JobListings />, { disableLifecycleMethods: true });
+    const componentWrapper = wrapper.find('JobListings').instance();
+    await componentWrapper.getAllJobListings();
+    componentWrapper.inputFilter(mockEvent);
+    expect(componentWrapper.state.filteredListings.length).toBe(1);
   });
 })
