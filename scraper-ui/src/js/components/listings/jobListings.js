@@ -74,6 +74,7 @@ class JobListings extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <div>
@@ -86,11 +87,11 @@ class JobListings extends Component {
             <li><button id='indeed-filter-btn' value='indeed' onClick={this.sourceSiteFilter}>Indeed</button></li>
           </ul>
         </div>
-        <div>
+        <Grid container className={classes.listingsContainer} alignItems={'center'} direction={'row'} justify={'center'} spacing={16}>
           {this.state.filteredListings.map((item) => {
             return <Listing listing={item} key={item.listingId.S}/>
           })}
-        </div>
+        </Grid>
       </div>
     )
   }

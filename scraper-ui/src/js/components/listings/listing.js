@@ -1,12 +1,25 @@
 import React from 'react';
+import Grid from 'material-ui/Grid';
+import Paper from 'material-ui/Paper';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import styles from './listingsStyle';
 
 function Listing(props) {
+  const { classes } = props;
   return (
-    <div>
-      <h3>{props.listing.jobTitle.S} - <a href={props.listing.link.S}>{props.listing.link.S}</a></h3>
-      <h4>{`Source: ${props.listing.sourceSite.S}`}</h4>
-    </div>
+    <Grid item xs={12} sm={6}>
+      <Paper elevation={4} className={classes.paper}>
+        <h4>{props.listing.jobTitle.S}</h4>
+        <a href={props.listing.link.S}>{props.listing.link.S}</a>
+        <h4>{props.listing.sourceSite.S}</h4>
+      </Paper>
+    </Grid>
   )
 }
 
-export default Listing;
+Listing.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Listing);
