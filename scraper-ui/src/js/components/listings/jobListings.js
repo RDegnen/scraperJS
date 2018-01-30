@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import Listing from './listing';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
+import styles from './listingsStyle';
 
 class JobListings extends Component {
   constructor(props) {
@@ -92,4 +96,8 @@ class JobListings extends Component {
   }
 };
 
-export default JobListings;
+JobListings.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(JobListings);

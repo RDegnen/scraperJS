@@ -18,6 +18,9 @@ const styles = theme => ({
     background: grey[800],
     height: '100%',
     position: 'fixed',
+    [theme.breakpoints.down('xs')]: {
+      position: 'static',
+    },
   },
   mainContainer: {
     height: '100%',
