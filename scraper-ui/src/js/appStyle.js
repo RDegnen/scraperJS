@@ -3,7 +3,7 @@ import grey from 'material-ui/colors/grey';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 30,
+    height: '100%',
   },
   paper: {
     padding: 16,
@@ -15,8 +15,12 @@ const styles = theme => ({
     padding: 16,
     textAlign: 'center',
     color: grey[50],
-    height: '100%',
     background: grey[800],
+    height: '100%',
+    position: 'fixed',
+  },
+  mainContainer: {
+    height: '100%',
   },
 });
 

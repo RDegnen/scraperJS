@@ -83,19 +83,21 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className={classes.root}>
-          <Grid container alignItems={'stretch'} direction={'row-reverse'} justify={'center'} spacing={24}>
-            <Grid item xs={12} sm={3} className={classes.nav}>
-              <h1 className="App-title">ScraperJS</h1>
-                  {isAuthorized ? (
-                    <div>
-                      <Logout setAuthorized={this.setAuthorized}/>
-                      <Scraper />
-                    </div>
-                  ) : (
-                    <Login />
-                  )}
+          <Grid container className={classes.mainContainer} alignItems={'stretch'} direction={'row-reverse'} justify={'center'} spacing={24}>
+            <Grid item xs={12} sm={2}>
+              <div className={classes.nav}>
+                <h1 className="App-title">ScraperJS</h1>
+                    {isAuthorized ? (
+                      <div>
+                        <Logout setAuthorized={this.setAuthorized}/>
+                        <Scraper />
+                      </div>
+                    ) : (
+                      <Login />
+                    )}
+              </div>
             </Grid>
-            <Grid item xs={12} sm={9} className={classes.paper}>
+            <Grid item xs={12} sm={10} className={classes.paper}>
               <Switch>
                 <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
                 <this.PrivateRoute path='/job-listings' component={JobListings} redirectTo='/login'/>
