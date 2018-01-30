@@ -83,8 +83,8 @@ class JobListings extends Component {
       <div>
         <Toolbar>
           <FormControl>
-            <InputLabel htmlFor="jobTitleSearch">Search Job Title</InputLabel>
-            <Input id='jobTitleSearch' placeholder='Search' onChange={this.inputFilter}/>
+            <InputLabel htmlFor="jobTitleSearch">Search</InputLabel>
+            <Input id='jobTitleSearch' onChange={this.inputFilter}/>
           </FormControl>
           <div className={classes.filterOptions}>
             <Typography type='button' className={classes.filterHeader}>Filters:</Typography>

@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import styles from './scraperStyle';
+import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button';
 
 class Scraper extends Component {
   constructor(props) {
@@ -18,6 +23,7 @@ class Scraper extends Component {
   }
 
   setLocation(e) {
+    console.log(e.target.value)
     e.preventDefault();
     this.setState({ location: e.target.value })
   }
@@ -78,19 +84,13 @@ class Scraper extends Component {
   render() {
     return (
       <div>
-        <input type='text' onChange={this.setLocation} placeholder='boston'/>
         <div>
           <div>
             <form id='scraper-form' onSubmit={this.scrape}>
-              <label>
-                Keywords:
-                <input type='text' value={this.state.keywords} onChange={this.setKeywords}/>
-              </label>
-              <label>
-                Amount of pages:
-                <input type='text' value={this.state.pages} onChange={this.setPages}/>
-              </label>
-              <input type="submit" value="Submit" />
+              <TextField label='Location' value={this.state.location} onChange={this.setLocation}/>
+              <TextField label='Keywords' value={this.state.keywords} onChange={this.setKeywords}/>
+              <TextField label='Pages' value={this.state.pages} onChange={this.setPages}/>
+              <Button raised color='primary' type="submit" value="Submit">Submit</Button>
             </form>
           </div>
         </div>
