@@ -3,9 +3,11 @@ import Listing from './listing';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
+import Input, { InputLabel }from 'material-ui/Input';
+import Typography from 'material-ui/Typography';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 import styles from './listingsStyle';
 
 class JobListings extends Component {
@@ -80,10 +82,12 @@ class JobListings extends Component {
     return (
       <div>
         <Toolbar>
-          <div>
-            <input type='text' onChange={this.inputFilter}/>
-          </div>
-          <div>
+          <FormControl>
+            <InputLabel htmlFor="jobTitleSearch">Search Job Title</InputLabel>
+            <Input id='jobTitleSearch' placeholder='Search' onChange={this.inputFilter}/>
+          </FormControl>
+          <div className={classes.filterOptions}>
+            <Typography type='button' className={classes.filterHeader}>Filters:</Typography>
             <Button onClick={this.sourceSiteFilter.bind(this, 'all')}>All</Button>
             <Button onClick={this.sourceSiteFilter.bind(this, 'craigslist')}>Craigslist</Button>
             <Button id='indeed-filter-btn' onClick={this.sourceSiteFilter.bind(this, 'indeed')}>Indeed</Button>
