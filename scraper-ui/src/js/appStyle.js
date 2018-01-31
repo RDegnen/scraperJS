@@ -25,6 +25,9 @@ const styles = theme => ({
   mainContainer: {
     height: '100%',
   },
+  navGrey: {
+    color: grey[50],
+  },
 });
 
 export default styles;

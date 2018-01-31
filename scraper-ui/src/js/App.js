@@ -9,6 +9,7 @@ import Scraper from './components/scraper/scraper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
 import styles from './appStyle'
 
 const renderMergedProps = (component, ...rest) => {
@@ -85,11 +86,11 @@ class App extends Component {
           <Grid container className={classes.mainContainer} alignItems={'stretch'} direction={'row-reverse'} justify={'center'} spacing={24}>
             <Grid item xs={12} sm={2}>
               <div className={classes.nav}>
-                <h1 className="App-title">ScraperJS</h1>
+                <Typography type='headline' className={classes.navGrey}>ScraperJS</Typography>
                     {isAuthorized ? (
                       <div>
-                        <Logout setAuthorized={this.setAuthorized}/>
                         <Scraper />
+                        <Logout setAuthorized={this.setAuthorized}/>
                       </div>
                     ) : (
                       <Login />

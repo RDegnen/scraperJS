@@ -24,6 +24,9 @@ const styles = theme => ({
       easing: theme.transitions.easing.ease,
     }),
   },
+  scrapeDiv: {
+    padding: '10px 0 5px 0',
+  },
 });
 
 export default styles;

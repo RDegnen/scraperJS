@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router-dom";
+import Button from 'material-ui/Button';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import styles from './authStyle';
 
 class Logout extends Component {
   constructor(props) {
@@ -25,10 +29,15 @@ class Logout extends Component {
   }
 
   render() {
+    const { classes } = this.props
     return (
-      <button id='sign-out-btn' onClick={this.logout}>Sign Out</button>
+      <Button className={classes.grey} id='sign-out-btn' onClick={this.logout}>Sign Out</Button>
     );
   }
 }
 
-export default withRouter(Logout);
+Logout.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(withRouter(Logout));

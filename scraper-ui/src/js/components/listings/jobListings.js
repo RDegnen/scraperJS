@@ -7,7 +7,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import Input, { InputLabel }from 'material-ui/Input';
 import Typography from 'material-ui/Typography';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { FormControl } from 'material-ui/Form';
 import styles from './listingsStyle';
 
 class JobListings extends Component {

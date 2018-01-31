@@ -9,9 +9,9 @@ class Scraper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: 'boston',
+      location: '',
       keywords: '',
-      pages: 1,
+      pages: '',
     };
     this.scrape = this.scrape.bind(this)
 
@@ -23,7 +23,6 @@ class Scraper extends Component {
   }
 
   setLocation(e) {
-    console.log(e.target.value)
     e.preventDefault();
     this.setState({ location: e.target.value })
   }
@@ -83,6 +82,12 @@ class Scraper extends Component {
 
   render() {
     const { classes } = this.props;
+    const disabled = this.state.location && this.state.keywords ? false : true;
+    let buttonClass;
+
+    if (disabled) buttonClass = classes.disabled;
+    else buttonClass = classes.scraperForm;
+
     return (
       <div>
         <div>
@@ -106,7 +111,9 @@ class Scraper extends Component {
                                                   underline: classes.underlineOverride } }}
                          label='Pages' value={this.state.pages}
                          onChange={this.setPages}/>
-              <Button raised color='primary' type="submit" value="Submit">Submit</Button>
+              <div className={classes.scrapeDiv}>
+                <Button raised disabled={disabled} color='secondary' className={buttonClass} type="submit" value="Submit">Scrape!</Button>
+              </div>
             </form>
           </div>
         </div>

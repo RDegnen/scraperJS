@@ -60,7 +60,7 @@ describe('Logout Component', () => {
       </MemoryRouter>
     );
     const componentWrapper = wrapper.find('Logout');
-    await componentWrapper.find('#sign-out-btn').simulate('click');
+    await componentWrapper.find('Button').simulate('click');
     expect(localStorage.getItem('authToken')).toBe(null);
     // Example for getting a child components instance for reference
     // wrapper.find('Logout').instance();
