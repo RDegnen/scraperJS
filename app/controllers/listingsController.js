@@ -13,15 +13,21 @@ const show = (req, res, next) => {
     .catch(err => next(err));
 };
 
+const userIndex = (req, res, next) => {
+  Listing.getUserListings(req)
+    .then(listings => res.json(listings))
+    .catch(err => next(err));
+};
+
 const create = (req, res, next) => {
   Scraper.getHtml()
     .then((data) => {
       if (req.params.source === 'craigslist') {
-        return Scraper.scrapeCraigslist(data);
+        return Scraper.scrapeCraigslist(req, data);
       } else if (req.params.source === 'indeed') {
-        return Scraper.scrapeIndeed(data);
+        return Scraper.scrapeIndeed(req, data);
       } else if (req.params.source === 'all') {
-        return Scraper.scrapeAll(data);
+        return Scraper.scrapeAll(req, data);
       }
     })
     .then(data => Scraper.writeListings(data))
@@ -39,6 +45,7 @@ const destroy = (req, res, next) => {
 module.exports = {
   index,
   show,
+  userIndex,
   create,
   destroy,
 };

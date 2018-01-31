@@ -45,6 +45,26 @@ const getListing = (req) => {
   });
 };
 
+const getUserListings = (req) => {
+  return new Promise((resolve, reject) => {
+    const userId = req.currentUser.userId.N;
+    const params = {
+      TableName: config.JOB_LISTINGS_TABLE,
+      IndexName: 'userId-index',
+      KeyConditionExpression: 'userId = :u',
+      ExpressionAttributeValues: {
+        ':u': {
+          N: userId,
+        },
+      },
+    };
+    dynamodb.query(params, (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+};
+
 const destroyListings = (listings) => {
   return new Promise((resolve, reject) => {
     // Put items in proper format for request
@@ -82,5 +102,6 @@ const destroyListings = (listings) => {
 module.exports = {
   getMultipleListings,
   getListing,
+  getUserListings,
   destroyListings,
 };

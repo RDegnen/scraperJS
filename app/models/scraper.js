@@ -17,7 +17,7 @@ const getHtml = () => {
   });
 };
 
-const scrapeCraigslist = (data) => {
+const scrapeCraigslist = (req, data) => {
   return new Promise((resolve, reject) => {
     const items = data.Items;
     const listings = [];
@@ -48,6 +48,9 @@ const scrapeCraigslist = (data) => {
               location: {
                 S: items[i].location.S,
               },
+              userId: {
+                N: req.currentUser.userId.N,
+              },
             },
           },
         };
@@ -58,7 +61,7 @@ const scrapeCraigslist = (data) => {
   });
 };
 
-const scrapeIndeed = (data) => {
+const scrapeIndeed = (req, data) => {
   return new Promise((resolve, reject) => {
     const items = data.Items;
     const listings = [];
@@ -88,6 +91,9 @@ const scrapeIndeed = (data) => {
               location: {
                 S: items[i].location.S,
               },
+              userId: {
+                N: req.currentUser.userId.N,
+              },
             },
           },
         };
@@ -99,9 +105,9 @@ const scrapeIndeed = (data) => {
   });
 };
 
-const scrapeAll = (data) => {
+const scrapeAll = (req, data) => {
   return new Promise((resolve, reject) => {
-    Promise.all([scrapeCraigslist(data), scrapeIndeed(data)])
+    Promise.all([scrapeCraigslist(req, data), scrapeIndeed(req, data)])
       .then((results) => {
         resolve([].concat(...results));
       })
