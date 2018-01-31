@@ -28,7 +28,9 @@ describe('Scraper', () => {
     const props = { classes: {} };
     const spy = jest.spyOn(TestScraper.prototype, 'scrape');
     const wrapper = shallow(<TestScraper {...props}/>);
+
     wrapper.find('#scraper-form').simulate('submit', mockEvent);
+
     expect(spy).toHaveBeenCalled();
 
     spy.mockReset();

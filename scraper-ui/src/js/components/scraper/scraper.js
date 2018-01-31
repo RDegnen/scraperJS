@@ -82,14 +82,30 @@ class Scraper extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <div>
           <div>
             <form id='scraper-form' onSubmit={this.scrape}>
-              <TextField label='Location' value={this.state.location} onChange={this.setLocation}/>
-              <TextField label='Keywords' value={this.state.keywords} onChange={this.setKeywords}/>
-              <TextField label='Pages' value={this.state.pages} onChange={this.setPages}/>
+              <TextField labelClassName={classes.scraperForm}
+                         InputProps={{ classes: { root: classes.scraperForm,
+                                                  inkbar: classes.inkbarOverride,
+                                                  underline: classes.underlineOverride } }}
+                         label='Location' value={this.state.location}
+                         onChange={this.setLocation}/>
+              <TextField labelClassName={classes.scraperForm}
+                         InputProps={{ classes: { root: classes.scraperForm,
+                                                  inkbar: classes.inkbarOverride,
+                                                  underline: classes.underlineOverride } }}
+                         label='Keywords' value={this.state.keywords}
+                         onChange={this.setKeywords}/>
+              <TextField labelClassName={classes.scraperForm}
+                         InputProps={{ classes: { root: classes.scraperForm,
+                                                  inkbar: classes.inkbarOverride,
+                                                  underline: classes.underlineOverride } }}
+                         label='Pages' value={this.state.pages}
+                         onChange={this.setPages}/>
               <Button raised color='primary' type="submit" value="Submit">Submit</Button>
             </form>
           </div>
@@ -105,5 +121,4 @@ Scraper.propTypes = {
 // export TestScraper so I can test the component without it being wrapped by
 // withStyles
 export { Scraper as TestScraper }
-
 export default withStyles(styles)(Scraper);
