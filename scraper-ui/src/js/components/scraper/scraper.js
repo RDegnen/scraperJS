@@ -85,9 +85,7 @@ class Scraper extends Component {
     const disabled = this.state.location && this.state.keywords ? false : true;
     let buttonClass;
 
-    if (disabled) buttonClass = classes.disabled;
-    else buttonClass = classes.scraperForm;
-
+    disabled ? buttonClass = classes.disabled : buttonClass = classes.scraperForm;
     return (
       <div>
         <div>

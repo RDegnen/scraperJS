@@ -1,4 +1,14 @@
 import grey from 'material-ui/colors/grey';
+import green from 'material-ui/colors/green';
+import { createMuiTheme } from 'material-ui/styles';
+
+const themeOverride = createMuiTheme({
+  palette: {
+    primary: {
+      main: green[700],
+    },
+  },
+});
 
 const styles = theme => ({
   root: {
@@ -17,7 +27,7 @@ const styles = theme => ({
     color: grey[50],
     background: grey[800],
     height: '100%',
-    position: 'fixed',
+    borderLeft: `solid ${themeOverride.palette.primary.main}`,
     [theme.breakpoints.down('xs')]: {
       position: 'static',
     },
@@ -28,6 +38,12 @@ const styles = theme => ({
   navGrey: {
     color: grey[50],
   },
+  fixed: {
+    position: 'fixed',
+  },
+  static: {
+    position: 'static',
+  },
 });
-
+export { themeOverride };
 export default styles;

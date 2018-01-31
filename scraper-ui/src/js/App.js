@@ -10,7 +10,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import styles from './appStyle'
+import { MuiThemeProvider } from 'material-ui/styles';
+import styles, { themeOverride } from './appStyle'
 
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
@@ -80,31 +81,36 @@ class App extends Component {
   render() {
     const { isAuthorized } = this.state;
     const { classes } = this.props;
+    let navPosition;
+
+    isAuthorized ? navPosition = classes.fixed : navPosition = classes.static;
     return (
       <BrowserRouter>
-        <div className={classes.root}>
-          <Grid container className={classes.mainContainer} alignItems={'stretch'} direction={'row-reverse'} justify={'center'} spacing={24}>
-            <Grid item xs={12} sm={2}>
-              <div className={classes.nav}>
-                <Typography type='headline' className={classes.navGrey}>ScraperJS</Typography>
-                    {isAuthorized ? (
-                      <div>
-                        <Scraper />
-                        <Logout setAuthorized={this.setAuthorized}/>
-                      </div>
-                    ) : (
-                      <Login />
-                    )}
-              </div>
+        <MuiThemeProvider theme={themeOverride}>
+          <div className={classes.root}>
+            <Grid container className={classes.mainContainer} alignItems={'stretch'} direction={'row-reverse'} justify={'center'} spacing={24}>
+              <Grid item xs={12} sm={2}>
+                <div className={`${classes.nav} ${navPosition}`}>
+                  <Typography type='headline' className={classes.navGrey}>ScraperJS</Typography>
+                      {isAuthorized ? (
+                        <div>
+                          <Scraper />
+                          <Logout setAuthorized={this.setAuthorized}/>
+                        </div>
+                      ) : (
+                        <Login />
+                      )}
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={10} className={classes.paper}>
+                <Switch>
+                  <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
+                  <this.PrivateRoute path='/job-listings' component={JobListings} redirectTo='/login'/>
+                </Switch>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={10} className={classes.paper}>
-              <Switch>
-                <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
-                <this.PrivateRoute path='/job-listings' component={JobListings} redirectTo='/login'/>
-              </Switch>
-            </Grid>
-          </Grid>
-        </div>
+          </div>
+        </MuiThemeProvider>
       </BrowserRouter>
     );
   }
