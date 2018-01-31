@@ -99,4 +99,11 @@ class Scraper extends Component {
   }
 };
 
-export default Scraper;
+Scraper.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+// export TestScraper so I can test the component without it being wrapped by
+// withStyles
+export { Scraper as TestScraper }
+
+export default withStyles(styles)(Scraper);

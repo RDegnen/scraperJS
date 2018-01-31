@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow, mount } from 'enzyme';
-import Scraper from '../components/scraper/scraper';
+import { TestScraper } from '../components/scraper/scraper';
 
 describe('Scraper', () => {
   beforeEach(() => {
@@ -23,11 +23,15 @@ describe('Scraper', () => {
   it('Runs the Craigslist scraper methods successfully', () => {
     const mockEvent = {
       target: { value: 'craigslist' },
-      preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
+      preventDefault: function() { console.log('SUP, FAKE SCRAPE EVENT HERE') },
     }
-    const spy = jest.spyOn(Scraper.prototype, 'scrape');
-    const wrapper = shallow(<Scraper />);
+    const props = { classes: {} };
+    const spy = jest.spyOn(TestScraper.prototype, 'scrape');
+    const wrapper = shallow(<TestScraper {...props}/>);
     wrapper.find('#scraper-form').simulate('submit', mockEvent);
     expect(spy).toHaveBeenCalled();
+
+    spy.mockReset();
+    spy.mockRestore();
   })
 })
