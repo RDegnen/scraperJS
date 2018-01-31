@@ -1,8 +1,12 @@
 import grey from 'material-ui/colors/grey';
 
 const styles = theme => ({
-  scraperForm: {
+  scraperFormInput: {
     color: grey[50],
+  },
+  scraperFormBtn: {
+    color: grey[50],
+    backgroundColor: theme.palette.primary.light,
   },
   disabled: {
     color: theme.palette.text.disabled,
@@ -17,7 +21,7 @@ const styles = theme => ({
   },
   underlineOverride: {
     '&:hover:not($disabled):before': {
-      backgroundColor: grey[50],
+      backgroundColor: theme.palette.primary.light,
     },
     transition: theme.transitions.create('background-color', {
       duration: theme.transitions.duration.shorter,

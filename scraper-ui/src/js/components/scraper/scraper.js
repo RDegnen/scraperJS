@@ -85,32 +85,32 @@ class Scraper extends Component {
     const disabled = this.state.location && this.state.keywords ? false : true;
     let buttonClass;
 
-    disabled ? buttonClass = classes.disabled : buttonClass = classes.scraperForm;
+    disabled ? buttonClass = classes.disabled : buttonClass = classes.scraperFormBtn;
     return (
       <div>
         <div>
           <div>
             <form id='scraper-form' onSubmit={this.scrape}>
-              <TextField labelClassName={classes.scraperForm}
-                         InputProps={{ classes: { root: classes.scraperForm,
+              <TextField labelClassName={classes.scraperFormInput}
+                         InputProps={{ classes: { root: classes.scraperFormInput,
                                                   inkbar: classes.inkbarOverride,
                                                   underline: classes.underlineOverride } }}
                          label='Location' value={this.state.location}
                          onChange={this.setLocation}/>
-              <TextField labelClassName={classes.scraperForm}
-                         InputProps={{ classes: { root: classes.scraperForm,
+              <TextField labelClassName={classes.scraperFormInput}
+                         InputProps={{ classes: { root: classes.scraperFormInput,
                                                   inkbar: classes.inkbarOverride,
                                                   underline: classes.underlineOverride } }}
                          label='Keywords' value={this.state.keywords}
                          onChange={this.setKeywords}/>
-              <TextField labelClassName={classes.scraperForm}
-                         InputProps={{ classes: { root: classes.scraperForm,
+              <TextField labelClassName={classes.scraperFormInput}
+                         InputProps={{ classes: { root: classes.scraperFormInput,
                                                   inkbar: classes.inkbarOverride,
                                                   underline: classes.underlineOverride } }}
                          label='Pages' value={this.state.pages}
                          onChange={this.setPages}/>
               <div className={classes.scrapeDiv}>
-                <Button raised disabled={disabled} color='secondary' className={buttonClass} type="submit" value="Submit">Scrape!</Button>
+                <Button raised disabled={disabled} className={buttonClass} type="submit" value="Submit">Scrape!</Button>
               </div>
             </form>
           </div>

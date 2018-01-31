@@ -5,7 +5,8 @@ import { createMuiTheme } from 'material-ui/styles';
 const themeOverride = createMuiTheme({
   palette: {
     primary: {
-      main: green[700],
+      light: green[200],
+      main: green[800],
     },
   },
 });
