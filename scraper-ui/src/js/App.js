@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect, Link } from 'react-router-dom';
 import '../styles/App.css';
 import Login from './components/auth/login';
 import Logout from './components/auth/logout';
@@ -11,6 +11,7 @@ import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import { MuiThemeProvider } from 'material-ui/styles';
+import Button from 'material-ui/Button';
 import styles, { themeOverride } from './appStyle'
 
 const renderMergedProps = (component, ...rest) => {
@@ -96,6 +97,10 @@ class App extends Component {
                         <div>
                           <Scraper />
                           <Logout setAuthorized={this.setAuthorized}/>
+                          <div>
+                            <Button color='primary' component={props => <Link {...props}/>} to='/job-listings'>All Listings</Button>
+                            <Button color='primary' component={props => <Link {...props}/>} to='/user-listings'>My Listings</Button>
+                          </div>
                         </div>
                       ) : (
                         <Login />
@@ -105,7 +110,7 @@ class App extends Component {
               <Grid item xs={12} sm={10} className={classes.paper}>
                 <Switch>
                   <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
-                  <this.PrivateRoute path='/job-listings' component={JobListings} redirectTo='/login'/>
+                  <this.PrivateRoute path='/job-listings' component={JobListings} userListings={false} redirectTo='/login'/>
                   <this.PrivateRoute path='/user-listings' component={JobListings} userListings={true} redirectTo='/login'/>
                 </Switch>
               </Grid>

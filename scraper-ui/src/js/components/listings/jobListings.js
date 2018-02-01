@@ -42,10 +42,13 @@ class JobListings extends Component {
     })
     .catch(err => console.log(err));
   }
-
+  // Determine to get the job listings scraped by the user or all the listings from all users.
   componentWillMount() {
-    // Determine to get the job listings scraped by the user or all the listings from all users.
     this.props.userListings ? this.getJobListings(true) : this.getJobListings(false);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    nextProps.userListings ? this.getJobListings(true) : this.getJobListings(false);
   }
   // FILTERS: inputFilter is applied first onto this.state.jobListings, and then
   // sourceSiteFilter is applied onto that. inputFilter will then check if currentSiteFilter
