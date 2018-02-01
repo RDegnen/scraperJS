@@ -45,7 +45,7 @@ describe('Job listings', () => {
   it('renders JobListings without crashing', async () => {
     const wrapper = mount(<JobListings />, { disableLifecycleMethods: true });
     const componentWrapper = wrapper.find('JobListings').instance();
-    await componentWrapper.getAllJobListings();
+    await componentWrapper.getJobListings();
     expect(componentWrapper.state.jobListings.length).toBe(3);
     expect(componentWrapper.state.filteredListings.length).toBe(3);
   });
@@ -53,7 +53,7 @@ describe('Job listings', () => {
   it('filters listings by site', async () => {
     const wrapper = mount(<JobListings />, { disableLifecycleMethods: true });
     const componentWrapper = wrapper.find('JobListings').instance();
-    await componentWrapper.getAllJobListings();
+    await componentWrapper.getJobListings();
     componentWrapper.sourceSiteFilter('indeed');
     expect(componentWrapper.state.filteredListings.length).toBe(2);
   });
@@ -65,7 +65,7 @@ describe('Job listings', () => {
     }
     const wrapper = mount(<JobListings />, { disableLifecycleMethods: true });
     const componentWrapper = wrapper.find('JobListings').instance();
-    await componentWrapper.getAllJobListings();
+    await componentWrapper.getJobListings();
     componentWrapper.inputFilter(mockEvent);
     expect(componentWrapper.state.filteredListings.length).toBe(1);
   });
