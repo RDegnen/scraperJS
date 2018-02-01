@@ -96,11 +96,12 @@ class App extends Component {
                       {isAuthorized ? (
                         <div>
                           <Scraper />
-                          <Logout setAuthorized={this.setAuthorized}/>
-                          <div>
-                            <Button color='primary' component={props => <Link {...props}/>} to='/job-listings'>All Listings</Button>
-                            <Button color='primary' component={props => <Link {...props}/>} to='/user-listings'>My Listings</Button>
+                          <div className={classes.navLinkDiv}>
+                            <Typography type='title' className={classes.navGrey}>View Listings</Typography>
+                            <Button size='small' className={classes.navLink} component={props => <Link {...props}/>} to='/job-listings'>All Listings</Button>
+                            <Button size='small' className={classes.navLink} component={props => <Link {...props}/>} to='/user-listings'>My Listings</Button>
                           </div>
+                          <Logout setAuthorized={this.setAuthorized}/>
                         </div>
                       ) : (
                         <Login />

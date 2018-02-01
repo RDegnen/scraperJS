@@ -23,7 +23,7 @@ const styles = theme => ({
     height: '100%',
   },
   nav: {
-    padding: 16,
+    padding: '16px 0',
     textAlign: 'center',
     color: grey[50],
     background: grey[800],
@@ -38,6 +38,20 @@ const styles = theme => ({
   },
   navGrey: {
     color: grey[50],
+  },
+  navLink: {
+    color: grey[50],
+    '&:hover': {
+      color: themeOverride.palette.primary.light,
+    },
+    '&:focus': {
+      color: themeOverride.palette.primary.light,
+      borderBottom: `solid ${themeOverride.palette.primary.light}`
+    },
+  },
+  navLinkDiv: {
+    borderBottom: `solid ${themeOverride.palette.primary.main}`,
+    padding: '16px 0',
   },
   fixed: {
     position: 'fixed',
