@@ -23,9 +23,11 @@ class JobListings extends Component {
     this.inputFilter = this.inputFilter.bind(this);
   }
 
-  getAllJobListings() {
+  getJobListings(isUser) {
     const authToken = localStorage.getItem('authToken');
-    return fetch('listings/all', {
+    let url;
+    isUser ? url = 'listings/get/user' : url = 'listings/all';
+    return fetch(url, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -42,7 +44,8 @@ class JobListings extends Component {
   }
 
   componentWillMount() {
-    this.getAllJobListings();
+    // Determine to get the job listings scraped by the user or all the listings from all users.
+    this.props.userListings ? this.getJobListings(true) : this.getJobListings(false);
   }
   // FILTERS: inputFilter is applied first onto this.state.jobListings, and then
   // sourceSiteFilter is applied onto that. inputFilter will then check if currentSiteFilter

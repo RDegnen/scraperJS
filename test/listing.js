@@ -96,6 +96,23 @@ describe('Listing actions', () => {
     });
   });
 
+  describe('/Get all user listings', () => {
+    it('should get all listings by user', () => {
+      return new Promise((resolve, reject) => {
+        chai.request(app)
+          .get('/listings/get/user')
+          .set('authtoken', process.env.TEST_TOKEN_2)
+          .then((res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.Items.should.have.lengthOf(92);
+            resolve();
+          })
+          .catch(err => reject(err));
+      });
+    });
+  });
+
   describe('/DELETE listings', () => {
     it('should delete all listings', () => {
       return new Promise((resolve, reject) => {
