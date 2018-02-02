@@ -45,7 +45,7 @@ class JobListings extends Component {
   }
 
   deleteJobListing(e) {
-    const params = e.currentTarget.value.split(' ');
+    const params = e.currentTarget.value.split(',');
     const body = {
       listingId: params[0],
       listingDate: params[1],
@@ -61,7 +61,11 @@ class JobListings extends Component {
         'Content-Type': 'application/json',
       },
     })
-    .then(res => console.log(res))
+    .then((res) => {
+      console.log(res);
+      this.state.jobListings.splice(params[2], 1)
+      this.setState({ jobListings: this.state.jobListings  });
+    })
     .catch(err => console.log(err));
   }
   // Determine to get the job listings scraped by the user or all the listings from all users.
@@ -122,8 +126,8 @@ class JobListings extends Component {
           </div>
         </Toolbar>
         <Grid container className={classes.listingsContainer} alignItems={'center'} direction={'row'} justify={'center'} spacing={16}>
-          {this.state.filteredListings.map((item) => {
-            return <Listing listing={item} key={item.listingId.S} deleteItem={this.deleteJobListing} isUserListing={this.props.userListings}/>
+          {this.state.filteredListings.map((item, i) => {
+            return <Listing listing={item} index={i} key={item.listingId.S} deleteItem={this.deleteJobListing} isUserListing={this.props.userListings}/>
           })}
         </Grid>
       </div>

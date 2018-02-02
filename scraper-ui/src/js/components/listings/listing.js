@@ -25,7 +25,7 @@ function Listing(props) {
                       raised
                       color='secondary'
                       onClick={props.deleteItem}
-                      value={`${props.listing.listingId.S} ${props.listing.listingDate.S}`}>
+                      value={`${props.listing.listingId.S},${props.listing.listingDate.S},${props.index}`}>
                  Delete
                 <Delete className={classes.rightIcon} />
               </Button>
