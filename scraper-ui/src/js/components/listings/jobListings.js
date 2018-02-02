@@ -64,6 +64,8 @@ class JobListings extends Component {
     .then((res) => {
       console.log(res);
       this.state.jobListings.splice(params[2], 1)
+      this.state.currentInputFilter.splice(params[2], 1)
+      this.state.filteredListings.splice(params[2], 1)
       this.setState({ jobListings: this.state.jobListings  });
     })
     .catch(err => console.log(err));
