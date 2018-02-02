@@ -40,14 +40,8 @@ const styles = theme => ({
     color: grey[50],
   },
   navLink: {
-    color: grey[50],
-    '&:hover': {
-      color: themeOverride.palette.primary.light,
-    },
-    '&:focus': {
-      color: themeOverride.palette.primary.light,
-      borderBottom: `solid ${themeOverride.palette.primary.light}`
-    },
+    color: themeOverride.palette.primary.light,
+    borderBottom: `solid ${themeOverride.palette.primary.light}`,
   },
   navLinkDiv: {
     borderBottom: `solid ${themeOverride.palette.primary.main}`,

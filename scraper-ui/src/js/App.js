@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Redirect, Link } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect, NavLink } from 'react-router-dom';
 import '../styles/App.css';
 import Login from './components/auth/login';
 import Logout from './components/auth/logout';
@@ -43,7 +43,6 @@ class App extends Component {
   }
 
   PrivateRoute({ component, redirectTo, ...rest }) {
-    console.log(this.state.isAuthorized)
     return (
       <Route {...rest} render={routeProps => {
         return this.state.isAuthorized ? (
@@ -98,8 +97,14 @@ class App extends Component {
                           <Scraper />
                           <div className={classes.navLinkDiv}>
                             <Typography type='title' className={classes.navGrey}>View Listings</Typography>
-                            <Button size='small' className={classes.navLink} component={props => <Link {...props}/>} to='/job-listings'>All Listings</Button>
-                            <Button size='small' className={classes.navLink} component={props => <Link {...props}/>} to='/user-listings'>My Listings</Button>
+                            <Button size='small' activeClassName={classes.navLink}
+                                                 className={classes.navGrey}
+                                                 component={props => <NavLink {...props}/>}
+                                                 to='/job-listings'>All Listings</Button>
+                            <Button size='small' activeClassName={classes.navLink}
+                                                 className={classes.navGrey}
+                                                 component={props => <NavLink {...props}/>}
+                                                 to='/user-listings'>My Listings</Button>
                           </div>
                           <Logout setAuthorized={this.setAuthorized}/>
                         </div>
