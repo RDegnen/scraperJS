@@ -63,10 +63,10 @@ class JobListings extends Component {
     })
     .then((res) => {
       console.log(res);
-      // FIXME This works correctly when deleting a card while one of the site filters
-      // is selected but not yet when the all is selected
+      // get the index of listing in the jobListings array when deleting from filteredListings
       const index = this.state.jobListings.map(i => i.listingId.S).indexOf(params[0])
-      this.state.filteredListings.splice(params[2], 1)
+      // Only delete from filteredListings when one of the site filters is selected
+      if (this.state.currentSiteFilter !== 'all') this.state.filteredListings.splice(params[2], 1);
       this.state.jobListings.splice(index, 1)
 
       this.setState({ jobListings: this.state.jobListings  });
