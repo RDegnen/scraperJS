@@ -14,7 +14,7 @@ const writePageToDynamo = (results, reqBody) => {
     for (let i = 0; i < results.length; i++) {
       let id = null;
       if (reqBody.source === 'craigslist') {
-        id = `craigslist#${reqBody.location}#${count}#${dateString}`;
+        id = `craigslist#${reqBody.location}#${reqBody.terms}#${count}#${dateString}`;
         count += 1;
       } else if (reqBody.source === 'indeed') {
         id = `indeed#${reqBody.location}#${reqBody.terms}#${count}#${dateString}`;
@@ -55,11 +55,12 @@ const collectCraigslistHtml = (req) => {
   return new Promise((resolve, reject) => {
     let { location } = req.body;
     location = location.split(' ').join('');
-    const newBody = { location, source: 'craigslist' };
+    const terms = req.body.terms.map(t => t.split(' ').join('+'));
+    const newBody = { location, terms, source: 'craigslist' };
 
-    const rp1 = rp(`https://${location}.craigslist.org/d/internet-engineering/search/eng`);
-    const rp2 = rp(`https://${location}.craigslist.org/d/software-qa-dba-etc/search/sof`);
-    const rp3 = rp(`https://${location}.craigslist.org/d/web-html-info-design/search/web`);
+    const rp1 = rp(`https://${location}.craigslist.org/search/eng?query=${terms[0]}`);
+    const rp2 = rp(`https://${location}.craigslist.org/search/sof?query=${terms[0]}`);
+    const rp3 = rp(`https://${location}.craigslist.org/search/web?query=${terms[0]}`);
     // Run all 3 request-promise promises and return array of html results
     Promise.all([rp1, rp2, rp3])
       .then(results => writePageToDynamo(results, newBody))
