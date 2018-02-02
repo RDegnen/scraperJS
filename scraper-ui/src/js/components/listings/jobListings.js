@@ -19,6 +19,7 @@ class JobListings extends Component {
       currentSiteFilter: 'all',
       currentInputFilter: [],
     };
+    this.deleteJobListing = this.deleteJobListing.bind(this);
     this.sourceSiteFilter = this.sourceSiteFilter.bind(this);
     this.inputFilter = this.inputFilter.bind(this);
   }
@@ -40,6 +41,27 @@ class JobListings extends Component {
       this.setState({ filteredListings: data.Items })
       this.setState({ currentInputFilter: data.Items })
     })
+    .catch(err => console.log(err));
+  }
+
+  deleteJobListing(e) {
+    const params = e.currentTarget.value.split(' ');
+    const body = {
+      listingId: params[0],
+      listingDate: params[1],
+    };
+    const authToken = localStorage.getItem('authToken');
+    return fetch('listings/destroy', {
+      method: 'delete',
+      mode: 'cors',
+      body: JSON.stringify(body),
+      headers: {
+        authtoken: authToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(res => console.log(res))
     .catch(err => console.log(err));
   }
   // Determine to get the job listings scraped by the user or all the listings from all users.
@@ -101,7 +123,7 @@ class JobListings extends Component {
         </Toolbar>
         <Grid container className={classes.listingsContainer} alignItems={'center'} direction={'row'} justify={'center'} spacing={16}>
           {this.state.filteredListings.map((item) => {
-            return <Listing listing={item} key={item.listingId.S}/>
+            return <Listing listing={item} key={item.listingId.S} deleteItem={this.deleteJobListing} isUserListing={this.props.userListings}/>
           })}
         </Grid>
       </div>

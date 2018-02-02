@@ -12,6 +12,9 @@ const styles = theme => ({
   filterOptions: {
     padding: '0 16px'
   },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
 });
 
 export default styles;

@@ -5,6 +5,7 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import Delete from 'material-ui-icons/Delete';
 import styles from './listingsStyle';
 
 function Listing(props) {
@@ -19,6 +20,16 @@ function Listing(props) {
             <Button raised href={props.listing.link.S} size='small' color='primary'>
               Link
             </Button>
+            {props.isUserListing === true &&
+              <Button size='small'
+                      raised
+                      color='secondary'
+                      onClick={props.deleteItem}
+                      value={`${props.listing.listingId.S} ${props.listing.listingDate.S}`}>
+                 Delete
+                <Delete className={classes.rightIcon} />
+              </Button>
+            }
           </CardActions>
         </CardContent>
       </Card>
