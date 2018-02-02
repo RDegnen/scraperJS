@@ -36,6 +36,12 @@ const create = (req, res, next) => {
 };
 
 const destroy = (req, res, next) => {
+  Listing.destroyListing(req)
+    .then(resp => res.status(204).json(resp))
+    .catch(err => next(err));
+};
+
+const destroyBulk = (req, res, next) => {
   Listing.getMultipleListings(req)
     .then(data => Listing.destroyListings(data))
     .then(resp => res.json(resp))
@@ -48,4 +54,5 @@ module.exports = {
   userIndex,
   create,
   destroy,
+  destroyBulk,
 };

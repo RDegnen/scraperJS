@@ -37,7 +37,7 @@ const scrapeCraigslist = (req, data) => {
                 S: href,
               },
               listingId: {
-                S: `c${dataId[dataId.length - 1].split('.')[0]}`,
+                S: `c${dataId[dataId.length - 1].split('.')[0]}#${req.currentUser.userId.N}`,
               },
               sourceSite: {
                 S: 'craigslist',
@@ -80,7 +80,7 @@ const scrapeIndeed = (req, data) => {
                 S: `https://www.indeed.com/${href}`,
               },
               listingId: {
-                S: $(elem).attr('id'),
+                S: `${$(elem).attr('id')}#${req.currentUser.userId.N}`,
               },
               sourceSite: {
                 S: 'indeed',

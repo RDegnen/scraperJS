@@ -113,6 +113,25 @@ describe('Listing actions', () => {
     });
   });
 
+  describe('/DELETE listing', () => {
+    it('should delete one listing by primary key', () => {
+      return new Promise((resolve, reject) => {
+        chai.request(app)
+          .delete('/listings/destroy')
+          .set('authtoken', process.env.TEST_TOKEN_2)
+          .send({
+            listingId: 'c6426374584#12345679123456',
+            listingDate: '2017-12-15 11:18',
+          })
+          .then((res) => {
+            res.should.have.status(204);
+            resolve();
+          })
+          .catch(err => reject(err));
+      });
+    });
+  });
+
   describe('/DELETE listings', () => {
     it('should delete all listings', () => {
       return new Promise((resolve, reject) => {

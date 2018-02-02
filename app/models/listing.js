@@ -65,6 +65,26 @@ const getUserListings = (req) => {
   });
 };
 
+const destroyListing = (req) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Key: {
+        listingId: {
+          S: req.body.listingId,
+        },
+        listingDate: {
+          S: req.body.listingDate,
+        },
+      },
+      TableName: config.JOB_LISTINGS_TABLE,
+    };
+    dynamodb.deleteItem(params, (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+};
+
 const destroyListings = (listings) => {
   return new Promise((resolve, reject) => {
     // Put items in proper format for request
@@ -103,5 +123,6 @@ module.exports = {
   getMultipleListings,
   getListing,
   getUserListings,
+  destroyListing,
   destroyListings,
 };
