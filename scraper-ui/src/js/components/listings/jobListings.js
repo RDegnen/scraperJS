@@ -65,8 +65,9 @@ class JobListings extends Component {
       console.log(res);
       // get the index of listing in the jobListings array when deleting from filteredListings
       const index = this.state.jobListings.map(i => i.listingId.S).indexOf(params[0])
-      // Only delete from filteredListings when one of the site filters is selected
+      // Check if a site filter or input filter is active and remove from those
       if (this.state.currentSiteFilter !== 'all') this.state.filteredListings.splice(params[2], 1);
+      if (this.state.currentInputFilter.length > 0) this.state.currentInputFilter.splice(params[2], 1);
       this.state.jobListings.splice(index, 1)
 
       this.setState({ jobListings: this.state.jobListings  });
