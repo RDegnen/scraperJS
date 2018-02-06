@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "devstart": "nodemon app.js",
+    "prodstart": "NODE_ENV=production node app.js",
     "test": "mocha"
   },
   "repository": {
