@@ -81,9 +81,7 @@ class App extends Component {
   render() {
     const { isAuthorized } = this.state;
     const { classes } = this.props;
-    let navPosition;
 
-    isAuthorized ? navPosition = classes.fixed : navPosition = classes.static;
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={themeOverride}>
