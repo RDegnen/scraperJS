@@ -29,6 +29,7 @@ const styles = theme => ({
     background: grey[800],
     height: '100%',
     borderLeft: `solid ${themeOverride.palette.primary.main}`,
+    position: 'fixed',
     [theme.breakpoints.down('xs')]: {
       position: 'static',
     },

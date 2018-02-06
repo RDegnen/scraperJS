@@ -4,6 +4,9 @@ const styles = theme => ({
   },
   listingsContainer: {
     paddingLeft: 24,
+    [theme.breakpoints.down('xs')]: {
+      padding: '0 24px',
+    },
   },
   filterHeader: {
     display: 'inline',

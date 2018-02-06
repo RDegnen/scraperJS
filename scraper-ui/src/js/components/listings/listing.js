@@ -11,7 +11,7 @@ import styles from './listingsStyle';
 function Listing(props) {
   const { classes } = props;
   return (
-    <Grid item xs={12} sm={6}>
+    <Grid item xs={12} sm={12} md={6}>
       <Card>
         <CardContent className={classes.cardContent}>
           <Typography align='left' type='title'>{props.listing.jobTitle.S}</Typography>

@@ -89,8 +89,8 @@ class App extends Component {
         <MuiThemeProvider theme={themeOverride}>
           <div className={classes.root}>
             <Grid container className={classes.mainContainer} alignItems={'stretch'} direction={'row-reverse'} justify={'center'} spacing={24}>
-              <Grid item xs={12} sm={2}>
-                <div className={`${classes.nav} ${navPosition}`}>
+              <Grid item xs={12} sm={4} md={2}>
+                <div className={`${classes.nav}`}>
                   <Typography type='headline' className={classes.navGrey}>ScraperJS</Typography>
                       {isAuthorized ? (
                         <div>
@@ -113,7 +113,7 @@ class App extends Component {
                       )}
                 </div>
               </Grid>
-              <Grid item xs={12} sm={10} className={classes.paper}>
+              <Grid item xs={12} sm={8} md={10} className={classes.paper}>
                 <Switch>
                   <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
                   <this.PrivateRoute path='/job-listings' component={JobListings} userListings={false} redirectTo='/login'/>
