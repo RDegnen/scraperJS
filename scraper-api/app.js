@@ -40,6 +40,6 @@ app.use((err, req, res, next) => {
   res.json(err);
 });
 
-app.listen(8080, () => console.log('App listening on port 8080!'))
+app.listen(8080, () => console.log(`App listening on port 8080! in ${app.get('env')} environment`))
 
 module.exports = app;
