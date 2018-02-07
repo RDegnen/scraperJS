@@ -1,4 +1,4 @@
-FROM 8base/docker-amazonlinux-node
+FROM node:6.10.0
 
 WORKDIR /usr/src/scraper-api
 
@@ -10,3 +10,4 @@ COPY . .
 
 EXPOSE 8080
 CMD ["npm", "run", "prodstart"]
+USER node
