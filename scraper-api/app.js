@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 // routes
-const index = require('./config/routes/index');
 const listings = require('./config/routes/listings');
 const gather = require('./config/routes/gather');
 const users = require('./config/routes/users');
@@ -17,7 +16,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
-app.use('/', index);
 app.use('/listings', listings);
 app.use('/gather', gather);
 app.use('/users', users);
