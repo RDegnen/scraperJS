@@ -5,6 +5,8 @@ import styles from './scraperStyle';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
+const api = process.env.REACT_APP_NODE_API;
+
 class Scraper extends Component {
   constructor(props) {
     super(props);
@@ -46,7 +48,7 @@ class Scraper extends Component {
       pages: this.state.pages,
     }
     const authToken = localStorage.getItem('authToken');
-    return fetch('http://localhost:8080/gather', {
+    return fetch(`${api}/gather`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify(body),
@@ -66,7 +68,7 @@ class Scraper extends Component {
 
   createListings(source) {
     const authToken = localStorage.getItem('authToken');
-    return fetch(`listings/create/${source}`, {
+    return fetch(`${api}listings/create/${source}`, {
       method: 'POST',
       mode: 'cors',
       headers: {

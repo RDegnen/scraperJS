@@ -14,6 +14,8 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import styles, { themeOverride } from './appStyle'
 
+const api = process.env.REACT_APP_NODE_API;
+
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
   return (
@@ -59,7 +61,7 @@ class App extends Component {
   // Not using a data store so checking this whenever the component mounts
   checkAuthorized() {
     if (localStorage.getItem('authToken')) {
-      return fetch('users/validate', {
+      return fetch(`${api}users/validate`, {
         method: 'GET',
         mode: 'cors',
         headers: {

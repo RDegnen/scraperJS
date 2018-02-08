@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
 
+const api = process.env.REACT_APP_NODE_API;
+
 class Login extends Component {
   login() {
-    fetch('/users/login', {
+    fetch(`${api}users/login`, {
       method: 'GET',
       mode: 'cors',
     })

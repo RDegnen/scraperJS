@@ -10,6 +10,8 @@ import Typography from 'material-ui/Typography';
 import { FormControl } from 'material-ui/Form';
 import styles from './listingsStyle';
 
+const api = process.env.REACT_APP_NODE_API;
+
 class JobListings extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +29,7 @@ class JobListings extends Component {
   getJobListings(isUser) {
     const authToken = localStorage.getItem('authToken');
     let url;
-    isUser ? url = 'listings/get/user' : url = 'listings/all';
+    isUser ? url = `${api}listings/get/user` : url = `${api}listings/all`;
     return fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -51,7 +53,7 @@ class JobListings extends Component {
       listingDate: params[1],
     };
     const authToken = localStorage.getItem('authToken');
-    return fetch('listings/destroy', {
+    return fetch(`${api}listings/destroy`, {
       method: 'delete',
       mode: 'cors',
       body: JSON.stringify(body),

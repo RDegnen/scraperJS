@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import styles from './authStyle';
 
+const api = process.env.REACT_APP_NODE_API;
+
 class Logout extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +16,7 @@ class Logout extends Component {
   logout() {
     this.props.history.push('/login');
     const authToken = localStorage.getItem('authToken');
-    return fetch('/users/logout', {
+    return fetch(`${api}users/logout`, {
       method: 'POST',
       mode: 'cors',
       headers: {

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 
+const api = process.env.REACT_APP_NODE_API;
+
 class Authorize extends Component {
   // The Redirect from Github is sent here and then when the component mounts
   // it sends the url to the backend to create the token
   authorizeGithub(authUrl) {
     let data = { authUrl: authUrl }
-    return fetch('/users/auth', {
+    return fetch(`${api}users/auth`, {
       method: 'POST',
       mode: 'cors',
       headers: {
