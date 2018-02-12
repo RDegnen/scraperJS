@@ -1,0 +1,15 @@
+# Adding the docker-compose file here for git and so I don't forget it.
+version: '3.2'
+services:
+    app:
+      image: rdegnen/scraper-api:latest
+      ports:
+        - "443:8443"
+      volumes:
+        - type: bind
+          source: /etc/letsencrypt/live/scraperjsapi.info/privkey.pem
+          target: /etc/letsencrypt/live/scraperjsapi.info/privkey.pem
+        - type: bind
+          source: /etc/letsencrypt/live/scraperjsapi.info/cert.pem
+          target: /etc/letsencrypt/live/scraperjsapi.info/cert.pem
+      restart: always
