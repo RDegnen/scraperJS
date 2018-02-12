@@ -1,14 +1,17 @@
 require('dotenv').config();
 const express = require('express');
-const app = express();
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
 // routes
 const listings = require('./config/routes/listings');
 const gather = require('./config/routes/gather');
 const users = require('./config/routes/users');
+
+const app = express();
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -38,6 +41,16 @@ app.use((err, req, res, next) => {
   res.json(err);
 });
 
-app.listen(8080, () => console.log(`App listening on port 8080! in ${app.get('env')} environment`))
+if (app.get('env') === 'production') {
+  const options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/scraperjsapi.info/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/scraperjsapi.info/cert.pem'),
+  };
+  https.createServer(options, app, (req, res) => {
+    console.log(`App listening on port 8080! in ${app.get('env')} environment`);
+  }).listen(8443);
+} else {
+  app.listen(8080, () => console.log(`App listening on port 8080! in ${app.get('env')} environment`));
+}
 
 module.exports = app;
