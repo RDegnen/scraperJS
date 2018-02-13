@@ -20,6 +20,7 @@ class JobListings extends Component {
       filteredListings: [],
       currentSiteFilter: 'all',
       currentInputFilter: [],
+      currentInput: '',
     };
     this.deleteJobListing = this.deleteJobListing.bind(this);
     this.sourceSiteFilter = this.sourceSiteFilter.bind(this);
@@ -69,7 +70,7 @@ class JobListings extends Component {
       const index = this.state.jobListings.map(i => i.listingId.S).indexOf(params[0])
       // Check if a site filter or input filter is active and remove from those
       if (this.state.currentSiteFilter !== 'all') this.state.filteredListings.splice(params[2], 1);
-      if (this.state.currentInputFilter.length > 0) this.state.currentInputFilter.splice(params[2], 1);
+      if (this.state.currentInput.length > 0) this.state.currentInputFilter.splice(params[2], 1);
       this.state.jobListings.splice(index, 1)
 
       this.setState({ jobListings: this.state.jobListings  });
@@ -89,6 +90,9 @@ class JobListings extends Component {
   // is applied and if so, it will apply that to its full results.
   inputFilter(e) {
     e.preventDefault();
+    // Setting current input in state to track its length to delete cards properly
+    this.setState({ currentInput: e.target.value })
+
     let allMatches = this.state.jobListings.filter((item) => {
       let myRegEx = new RegExp(`^.*${e.target.value}.*$`, 'gi');
         return myRegEx.exec(item.jobTitle.S);
@@ -146,5 +150,5 @@ class JobListings extends Component {
 JobListings.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
+export { JobListings as TestJobListings }
 export default withStyles(styles)(JobListings);

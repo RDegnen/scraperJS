@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow, mount } from 'enzyme';
 import JobListings from '../components/listings/jobListings';
+import { TestJobListings } from '../components/listings/jobListings';
 
 describe('Job listings', () => {
   beforeEach(() => {
@@ -68,5 +69,17 @@ describe('Job listings', () => {
     await componentWrapper.getJobListings();
     componentWrapper.inputFilter(mockEvent);
     expect(componentWrapper.state.filteredListings.length).toBe(1);
+  });
+
+  it('deletes a listing', async () => {
+    const mockEvent = {
+      currentTarget: { value: '123456,454354095843' },
+      preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
+    }
+    const props = { classes: {} };
+    const wrapper = shallow(<TestJobListings {...props}/>, {disableLifecycleMethods: true});
+    await wrapper.instance().getJobListings();
+    await wrapper.instance().deleteJobListing(mockEvent);
+    expect(wrapper.instance().state.jobListings.length).toBe(2);
   });
 })
