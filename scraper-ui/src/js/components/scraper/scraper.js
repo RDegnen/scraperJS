@@ -48,7 +48,7 @@ class Scraper extends Component {
       pages: this.state.pages,
     }
     const authToken = localStorage.getItem('authToken');
-    return fetch(`${api}/gather`, {
+    return fetch(`${api}gather`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify(body),
