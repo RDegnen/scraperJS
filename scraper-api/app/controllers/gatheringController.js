@@ -1,7 +1,9 @@
 const Gatherer = require('../models/gatherer');
 
 const create = (req, res, next) => {
-  Promise.all([Gatherer.collectCraigslistHtml(req), Gatherer.collectIndeedHtml(req)])
+  Gatherer.fetchProxies()
+    .then(proxy => Promise.all([Gatherer.collectCraigslistHtml(req, proxy),
+      Gatherer.collectIndeedHtml(req, proxy)]))
     .then(resp => res.status(200).json(resp))
     .catch(err => next(err));
 };

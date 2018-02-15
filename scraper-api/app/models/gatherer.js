@@ -4,6 +4,26 @@ const config = require('config');
 
 const dynamodb = new AWS.DynamoDB();
 
+const fetchProxies = () => {
+  // fetch proxy list, unpack ip, port, and return a random proxy
+  return new Promise((resolve, reject) => {
+    const proxyApiKey = process.env.PROXY_API_KEY;
+    const options = {
+      url: `https://api.myprivateproxy.net/v1/fetchProxies/json/full/${proxyApiKey}`,
+      transform: (body) => {
+        const proxies = JSON.parse(body);
+        const { proxy_ip, proxy_port } = proxies[Math.floor(Math.random() * proxies.length)];
+        return `http://${proxy_ip}:${proxy_port}`;
+      },
+    };
+    rp(options)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch(err => reject(err));
+  });
+};
+
 const writePageToDynamo = (results, reqBody) => {
   return new Promise((resolve, reject) => {
     // Create array of PutRequest params to send to batchWriteItem
@@ -51,16 +71,17 @@ const writePageToDynamo = (results, reqBody) => {
   });
 };
 
-const collectCraigslistHtml = (req) => {
+const collectCraigslistHtml = (req, proxy) => {
   return new Promise((resolve, reject) => {
     let { location } = req.body;
     location = location.split(' ').join('');
+
     const terms = req.body.terms.map(t => t.split(' ').join('+'));
     const newBody = { location, terms, source: 'craigslist' };
 
-    const rp1 = rp(`https://${location}.craigslist.org/search/eng?query=${terms[0]}`);
-    const rp2 = rp(`https://${location}.craigslist.org/search/sof?query=${terms[0]}`);
-    const rp3 = rp(`https://${location}.craigslist.org/search/web?query=${terms[0]}`);
+    const rp1 = rp({ url: `https://${location}.craigslist.org/search/eng?query=${terms[0]}`, proxy });
+    const rp2 = rp({ url: `https://${location}.craigslist.org/search/sof?query=${terms[0]}`, proxy });
+    const rp3 = rp({ url: `https://${location}.craigslist.org/search/web?query=${terms[0]}`, proxy });
     // Run all 3 request-promise promises and return array of html results
     Promise.all([rp1, rp2, rp3])
       .then(results => writePageToDynamo(results, newBody))
@@ -69,10 +90,11 @@ const collectCraigslistHtml = (req) => {
   });
 };
 
-const collectIndeedHtml = (req) => {
+const collectIndeedHtml = (req, proxy) => {
   return new Promise((resolve, reject) => {
     let { location } = req.body;
     if (location.split(' ').length > 1) location = location.split(' ').join('+');
+
     const urls = [];
     const terms = req.body.terms.map(t => t.split(' ').join('+'));
     const newBody = { location, terms, source: 'indeed' };
@@ -84,7 +106,7 @@ const collectIndeedHtml = (req) => {
         let url;
         if (p === 0) url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}`;
         else url = `https://www.indeed.com/jobs?q=${terms[i]}&l=${location}&start=${p * 10}`;
-        urls.push(rp(url));
+        urls.push(rp({ url, proxy }));
       }
     }
     Promise.all(urls)
@@ -137,6 +159,7 @@ const deleteScrapedPages = (data) => {
 };
 
 module.exports = {
+  fetchProxies,
   writePageToDynamo,
   collectCraigslistHtml,
   collectIndeedHtml,
