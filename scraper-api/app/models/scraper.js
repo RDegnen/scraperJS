@@ -19,10 +19,10 @@ const getHtml = () => {
 
 const scrapeCraigslist = (req, data) => {
   return new Promise((resolve, reject) => {
-    const items = data.Items;
+    // const items = data.Items;
     const listings = [];
-    for (let i = 0; i < items.length; i++) {
-      const $ = cheerio.load(items[i].html.S);
+    for (let i = 0; i < data; i++) {
+      const $ = cheerio.load(data[i]);
       $('.result-row').each((j, elem) => {
         const href = $(elem).find('a').attr('href');
         const dataId = href.split('/');
@@ -63,10 +63,10 @@ const scrapeCraigslist = (req, data) => {
 
 const scrapeIndeed = (req, data) => {
   return new Promise((resolve, reject) => {
-    const items = data.Items;
+    // const items = data.Items;
     const listings = [];
-    for (let i = 0; i < items.length; i++) {
-      const $ = cheerio.load(items[i].html.S);
+    for (let i = 0; i < data; i++) {
+      const $ = cheerio.load(data[i]);
       $('.jobtitle').each((j, elem) => {
         const href = $(elem).find('a').attr('href');
         // Put listing in Dynamo format
@@ -107,6 +107,7 @@ const scrapeIndeed = (req, data) => {
 
 const scrapeAll = (req, data) => {
   return new Promise((resolve, reject) => {
+    // FIXME Flatten the data, its coming in as nested array
     Promise.all([scrapeCraigslist(req, data), scrapeIndeed(req, data)])
       .then((results) => {
         resolve([].concat(...results));

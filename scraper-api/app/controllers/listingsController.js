@@ -1,5 +1,6 @@
 const Listing = require('../models/listing');
 const Scraper = require('../models/scraper');
+const Gatherer = require('../models/gatherer');
 
 const index = (req, res, next) => {
   Listing.getMultipleListings(req)
@@ -20,19 +21,26 @@ const userIndex = (req, res, next) => {
 };
 
 const create = (req, res, next) => {
-  Scraper.getHtml()
-    .then((data) => {
-      if (req.params.source === 'craigslist') {
-        return Scraper.scrapeCraigslist(req, data);
-      } else if (req.params.source === 'indeed') {
-        return Scraper.scrapeIndeed(req, data);
-      } else if (req.params.source === 'all') {
-        return Scraper.scrapeAll(req, data);
-      }
-    })
+  Gatherer.fetchProxies()
+    .then(proxy => Promise.all([Gatherer.collectCraigslistHtml(req, proxy),
+      Gatherer.collectIndeedHtml(req, proxy)]))
+    .then(data => Scraper.scrapeAll(req, data))
     .then(data => Scraper.writeListings(data))
     .then(resp => res.json(resp))
     .catch(err => next(err));
+  // Scraper.getHtml()
+  //   .then((data) => {
+  //     if (req.params.source === 'craigslist') {
+  //       return Scraper.scrapeCraigslist(req, data);
+  //     } else if (req.params.source === 'indeed') {
+  //       return Scraper.scrapeIndeed(req, data);
+  //     } else if (req.params.source === 'all') {
+  //       return Scraper.scrapeAll(req, data);
+  //     }
+  //   })
+  //   .then(data => Scraper.writeListings(data))
+  //   .then(resp => res.json(resp))
+  //   .catch(err => next(err));
 };
 
 const destroy = (req, res, next) => {

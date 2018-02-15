@@ -73,6 +73,7 @@ const writePageToDynamo = (results, reqBody) => {
 
 const collectCraigslistHtml = (req, proxy) => {
   return new Promise((resolve, reject) => {
+
     let { location } = req.body;
     location = location.split(' ').join('');
 
@@ -84,7 +85,7 @@ const collectCraigslistHtml = (req, proxy) => {
     const rp3 = rp({ url: `https://${location}.craigslist.org/search/web?query=${terms[0]}`, proxy });
     // Run all 3 request-promise promises and return array of html results
     Promise.all([rp1, rp2, rp3])
-      .then(results => writePageToDynamo(results, newBody))
+      // .then(results => writePageToDynamo(results, newBody))
       .then(resp => resolve(resp))
       .catch(err => reject(err));
   });
@@ -92,6 +93,7 @@ const collectCraigslistHtml = (req, proxy) => {
 
 const collectIndeedHtml = (req, proxy) => {
   return new Promise((resolve, reject) => {
+
     let { location } = req.body;
     if (location.split(' ').length > 1) location = location.split(' ').join('+');
 
@@ -110,7 +112,7 @@ const collectIndeedHtml = (req, proxy) => {
       }
     }
     Promise.all(urls)
-      .then(results => writePageToDynamo(results, newBody))
+      // .then(results => writePageToDynamo(results, newBody))
       .then(resp => resolve(resp))
       .catch(err => reject(err));
   });
