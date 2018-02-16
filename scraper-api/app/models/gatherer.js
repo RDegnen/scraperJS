@@ -78,7 +78,7 @@ const collectCraigslistHtml = (req, proxy) => {
     location = location.split(' ').join('');
 
     const terms = req.body.terms.map(t => t.split(' ').join('+'));
-    const newBody = { location, terms, source: 'craigslist' };
+    // const newBody = { location, terms, source: 'craigslist' };
 
     const rp1 = rp({ url: `https://${location}.craigslist.org/search/eng?query=${terms[0]}`, proxy });
     const rp2 = rp({ url: `https://${location}.craigslist.org/search/sof?query=${terms[0]}`, proxy });
@@ -99,7 +99,7 @@ const collectIndeedHtml = (req, proxy) => {
 
     const urls = [];
     const terms = req.body.terms.map(t => t.split(' ').join('+'));
-    const newBody = { location, terms, source: 'indeed' };
+    // const newBody = { location, terms, source: 'indeed' };
     // Add + between terms for indeed search. Then loop over terms and within that loop
     // over pages so there is the specified amount of pages for each term.
     if (req.body.pages < 1) req.body.pages = 1;
