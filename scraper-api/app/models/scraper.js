@@ -4,19 +4,6 @@ const config = require('config');
 
 const dynamodb = new AWS.DynamoDB();
 
-const getHtml = () => {
-  return new Promise((resolve, reject) => {
-    const params = {
-      TableName: config.SCRAPED_PAGES_TABLE,
-      AttributesToGet: ['html', 'location'],
-    };
-    dynamodb.scan(params, (err, data) => {
-      if (err) reject(err);
-      resolve(data);
-    });
-  });
-};
-
 const scrapeCraigslist = (req, data, location) => {
   return new Promise((resolve, reject) => {
     // const items = data.Items;
@@ -109,7 +96,6 @@ const scrapeAll = (req, data) => {
   return new Promise((resolve, reject) => {
     const flatData = [].concat(...data);
     const { location } = req.body;
-    console.log(location)
     Promise.all([scrapeCraigslist(req, flatData, location), scrapeIndeed(req, flatData, location)])
       .then((results) => {
         resolve([].concat(...results));
@@ -135,7 +121,6 @@ const writeListings = (listings) => {
 };
 
 module.exports = {
-  getHtml,
   scrapeCraigslist,
   scrapeIndeed,
   scrapeAll,

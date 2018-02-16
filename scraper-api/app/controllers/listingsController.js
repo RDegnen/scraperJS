@@ -28,19 +28,6 @@ const create = (req, res, next) => {
     .then(data => Scraper.writeListings(data))
     .then(resp => res.json(resp))
     .catch(err => next(err));
-  // Scraper.getHtml()
-  //   .then((data) => {
-  //     if (req.params.source === 'craigslist') {
-  //       return Scraper.scrapeCraigslist(req, data);
-  //     } else if (req.params.source === 'indeed') {
-  //       return Scraper.scrapeIndeed(req, data);
-  //     } else if (req.params.source === 'all') {
-  //       return Scraper.scrapeAll(req, data);
-  //     }
-  //   })
-  //   .then(data => Scraper.writeListings(data))
-  //   .then(resp => res.json(resp))
-  //   .catch(err => next(err));
 };
 
 const destroy = (req, res, next) => {

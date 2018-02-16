@@ -8,7 +8,6 @@ const https = require('https');
 const fs = require('fs');
 // routes
 const listings = require('./config/routes/listings');
-const gather = require('./config/routes/gather');
 const users = require('./config/routes/users');
 
 const app = express();
@@ -20,7 +19,6 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use('/listings', listings);
-app.use('/gather', gather);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
