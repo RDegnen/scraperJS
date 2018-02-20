@@ -16,10 +16,7 @@ class Scraper extends Component {
       pages: '',
     };
     this.scrape = this.scrape.bind(this)
-
-    this.createListings = this.createListings.bind(this)
     this.setLocation = this.setLocation.bind(this)
-
     this.setKeywords = this.setKeywords.bind(this)
     this.setPages = this.setPages.bind(this)
   }
@@ -48,7 +45,7 @@ class Scraper extends Component {
       pages: this.state.pages,
     }
     const authToken = localStorage.getItem('authToken');
-    return fetch(`${api}gather`, {
+    return fetch(`${api}listings/create/all`, {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify(body),
@@ -56,23 +53,6 @@ class Scraper extends Component {
         authtoken: authToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-      },
-    })
-    .then(res => res.json())
-    .then((resp) => {
-      this.createListings('all');
-      console.log(resp);
-    })
-    .catch(err => console.log(err));
-  }
-
-  createListings(source) {
-    const authToken = localStorage.getItem('authToken');
-    return fetch(`${api}listings/create/${source}`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        authtoken: authToken,
       },
     })
     .then(res => res.json())
