@@ -82,4 +82,15 @@ describe('Job listings', () => {
     await wrapper.instance().deleteJobListing(mockEvent);
     expect(wrapper.instance().state.jobListings.length).toBe(2);
   });
+
+  it('deletes all listings', async () => {
+    const mockEvent = {
+      preventDefault: function() { console.log('SUP, FAKE EVENT HERE') },
+    }
+    const props = { classes: {} };
+    const wrapper = shallow(<TestJobListings {...props}/>, {disableLifecycleMethods: true});
+    await wrapper.instance().getJobListings();
+    await wrapper.instance().deleteAllListings(mockEvent);
+    expect(wrapper.instance().state.jobListings.length).toBe(0);
+  })
 })

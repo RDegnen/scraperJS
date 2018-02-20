@@ -58,6 +58,7 @@ class Scraper extends Component {
     .then(res => res.json())
     .then((resp) => {
       console.log(resp);
+      window.location.assign('/user-listings');
     })
     .catch(err => console.log(err));
   }

@@ -22,11 +22,8 @@ function Listing(props) {
             </Button>
             {props.isUserListing === true &&
               <Button size='small'
-                      raised
-                      color='secondary'
                       onClick={props.deleteItem}
                       value={`${props.listing.listingId.S},${props.listing.listingDate.S},${props.index}`}>
-                 Delete
                 <Delete className={classes.rightIcon} />
               </Button>
             }

@@ -23,6 +23,7 @@ class JobListings extends Component {
       currentInput: '',
     };
     this.deleteJobListing = this.deleteJobListing.bind(this);
+    this.deleteAllListings = this.deleteAllListings.bind(this);
     this.sourceSiteFilter = this.sourceSiteFilter.bind(this);
     this.inputFilter = this.inputFilter.bind(this);
   }
@@ -74,6 +75,23 @@ class JobListings extends Component {
       this.state.jobListings.splice(index, 1)
 
       this.setState({ jobListings: this.state.jobListings  });
+    })
+    .catch(err => console.log(err));
+  }
+
+  deleteAllListings(e) {
+    const authToken = localStorage.getItem('authToken');
+    return fetch(`${api}listings/destroy/bulk`, {
+      method: 'delete',
+      mode: 'cors',
+      headers: {
+        authtoken: authToken,
+      },
+    })
+    .then((res) => {
+      console.log(res)
+      this.setState({ jobListings: [] });
+      this.setState({ filteredListings: [] });
     })
     .catch(err => console.log(err));
   }
@@ -135,6 +153,9 @@ class JobListings extends Component {
             <Button onClick={this.sourceSiteFilter.bind(this, 'all')}>All</Button>
             <Button onClick={this.sourceSiteFilter.bind(this, 'craigslist')}>Craigslist</Button>
             <Button id='indeed-filter-btn' onClick={this.sourceSiteFilter.bind(this, 'indeed')}>Indeed</Button>
+          </div>
+          <div>
+            <Button raised color='secondary' onClick={this.deleteAllListings}>Delete All Listings</Button>
           </div>
         </Toolbar>
         <Grid container className={classes.listingsContainer} alignItems={'center'} direction={'row'} justify={'center'} spacing={16}>

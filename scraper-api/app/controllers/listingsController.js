@@ -37,7 +37,7 @@ const destroy = (req, res, next) => {
 };
 
 const destroyBulk = (req, res, next) => {
-  Listing.getMultipleListings(req)
+  Listing.getUserListings(req)
     .then(data => Listing.destroyListings(data))
     .then(resp => res.json(resp))
     .catch(err => next(err));
