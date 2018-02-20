@@ -3,9 +3,40 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../app');
 const User = require('../app/models/user');
+const AWS = require('aws-sdk');
+const Scraper = require('../app/models/scraper');
 
-const should = chai.should();
+const s3 = new AWS.S3();
 chai.use(chaiHttp);
+// Doing all this so I don't have to scrape Craigslist and Indeed everytime
+// I run some tests!
+function getCraigslistHtml() {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: 'ross-storage-bucket',
+      Key: 'craigslist.html',
+    };
+    s3.getObject(params, (err, data) => {
+      if (err) reject(err);
+      const htmlString = data.Body.toString();
+      resolve(htmlString);
+    });
+  });
+}
+
+function getIndeedHtml() {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: 'ross-storage-bucket',
+      Key: 'indeed.html',
+    };
+    s3.getObject(params, (err, data) => {
+      if (err) reject(err);
+      const htmlString = data.Body.toString();
+      resolve(htmlString);
+    });
+  });
+}
 
 describe('Listing actions', () => {
   const userData = {
@@ -19,29 +50,26 @@ describe('Listing actions', () => {
   };
 
   before((done) => {
+    const req = {
+      currentUser,
+      body: {
+        location: 'boston',
+      },
+    };
     User.createUser(userData, process.env.TEST_TOKEN_2)
       .then((data) => {
         console.log(data);
+      })
+      .catch(err => console.log(err));
+
+    Promise.all([getCraigslistHtml(), getIndeedHtml()])
+      .then(data => Scraper.scrapeAll(req, data))
+      .then(data => Scraper.writeListings(data))
+      .then((resp) => {
+        console.log(resp);
         done();
       })
       .catch(err => console.log(err));
-  });
-
-  describe('/POST listings', () => {
-    it('should create all listings', () => {
-      return new Promise((resolve, reject) => {
-        chai.request(app)
-          .post('/listings/create/all')
-          .set('authtoken', process.env.TEST_TOKEN_2)
-          .then((res) => {
-            res.should.have.status(200);
-            setTimeout(() => {
-              resolve();
-            }, 1000);
-          })
-          .catch(err => reject(err));
-      });
-    });
   });
 
   describe('/GET listings', () => {
@@ -53,7 +81,7 @@ describe('Listing actions', () => {
           .then((res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.Items.should.have.lengthOf(92);
+            res.body.Items.should.have.lengthOf(91);
             resolve();
           })
           .catch(err => reject(err));
@@ -105,7 +133,7 @@ describe('Listing actions', () => {
           .then((res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.Items.should.have.lengthOf(92);
+            res.body.Items.should.have.lengthOf(91);
             resolve();
           })
           .catch(err => reject(err));

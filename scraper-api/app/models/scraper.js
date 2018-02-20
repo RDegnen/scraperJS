@@ -6,7 +6,6 @@ const dynamodb = new AWS.DynamoDB();
 
 const scrapeCraigslist = (req, data, location) => {
   return new Promise((resolve, reject) => {
-    // const items = data.Items;
     const listings = [];
     for (let i = 0; i < data.length; i++) {
       const $ = cheerio.load(data[i]);
