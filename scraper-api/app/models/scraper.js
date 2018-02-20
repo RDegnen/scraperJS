@@ -4,25 +4,11 @@ const config = require('config');
 
 const dynamodb = new AWS.DynamoDB();
 
-const getHtml = () => {
+const scrapeCraigslist = (req, data, location) => {
   return new Promise((resolve, reject) => {
-    const params = {
-      TableName: config.SCRAPED_PAGES_TABLE,
-      AttributesToGet: ['html', 'location'],
-    };
-    dynamodb.scan(params, (err, data) => {
-      if (err) reject(err);
-      resolve(data);
-    });
-  });
-};
-
-const scrapeCraigslist = (req, data) => {
-  return new Promise((resolve, reject) => {
-    const items = data.Items;
     const listings = [];
-    for (let i = 0; i < items.length; i++) {
-      const $ = cheerio.load(items[i].html.S);
+    for (let i = 0; i < data.length; i++) {
+      const $ = cheerio.load(data[i]);
       $('.result-row').each((j, elem) => {
         const href = $(elem).find('a').attr('href');
         const dataId = href.split('/');
@@ -46,7 +32,7 @@ const scrapeCraigslist = (req, data) => {
                 S: $(elem).find('.result-date').attr('datetime'),
               },
               location: {
-                S: items[i].location.S,
+                S: location,
               },
               userId: {
                 N: req.currentUser.userId.N,
@@ -61,12 +47,12 @@ const scrapeCraigslist = (req, data) => {
   });
 };
 
-const scrapeIndeed = (req, data) => {
+const scrapeIndeed = (req, data, location) => {
   return new Promise((resolve, reject) => {
-    const items = data.Items;
+    // const items = data.Items;
     const listings = [];
-    for (let i = 0; i < items.length; i++) {
-      const $ = cheerio.load(items[i].html.S);
+    for (let i = 0; i < data.length; i++) {
+      const $ = cheerio.load(data[i]);
       $('.jobtitle').each((j, elem) => {
         const href = $(elem).find('a').attr('href');
         // Put listing in Dynamo format
@@ -89,7 +75,7 @@ const scrapeIndeed = (req, data) => {
                 S: 'NA',
               },
               location: {
-                S: items[i].location.S,
+                S: location,
               },
               userId: {
                 N: req.currentUser.userId.N,
@@ -107,7 +93,9 @@ const scrapeIndeed = (req, data) => {
 
 const scrapeAll = (req, data) => {
   return new Promise((resolve, reject) => {
-    Promise.all([scrapeCraigslist(req, data), scrapeIndeed(req, data)])
+    const flatData = [].concat(...data);
+    const { location } = req.body;
+    Promise.all([scrapeCraigslist(req, flatData, location), scrapeIndeed(req, flatData, location)])
       .then((results) => {
         resolve([].concat(...results));
       })
@@ -132,7 +120,6 @@ const writeListings = (listings) => {
 };
 
 module.exports = {
-  getHtml,
   scrapeCraigslist,
   scrapeIndeed,
   scrapeAll,
