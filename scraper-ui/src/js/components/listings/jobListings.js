@@ -140,7 +140,7 @@ class JobListings extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, userListings } = this.props;
     return (
       <div>
         <Toolbar>
@@ -154,9 +154,11 @@ class JobListings extends Component {
             <Button onClick={this.sourceSiteFilter.bind(this, 'craigslist')}>Craigslist</Button>
             <Button id='indeed-filter-btn' onClick={this.sourceSiteFilter.bind(this, 'indeed')}>Indeed</Button>
           </div>
-          <div>
-            <Button raised color='secondary' onClick={this.deleteAllListings}>Delete All Listings</Button>
-          </div>
+          {userListings === true &&
+            <div>
+              <Button raised color='secondary' onClick={this.deleteAllListings}>Delete All Listings</Button>
+            </div>
+          }
         </Toolbar>
         <Grid container className={classes.listingsContainer} alignItems={'center'} direction={'row'} justify={'center'} spacing={16}>
           {this.state.filteredListings.map((item, i) => {
