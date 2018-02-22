@@ -148,14 +148,15 @@ class JobListings extends Component {
             <InputLabel htmlFor="jobTitleSearch">Search</InputLabel>
             <Input id='jobTitleSearch' onChange={this.inputFilter}/>
           </FormControl>
+          {/* Not sure I want site filters, they don't really make sense
           <div className={classes.filterOptions}>
             <Typography type='button' className={classes.filterHeader}>Filters:</Typography>
             <Button onClick={this.sourceSiteFilter.bind(this, 'all')}>All</Button>
             <Button onClick={this.sourceSiteFilter.bind(this, 'craigslist')}>Craigslist</Button>
             <Button id='indeed-filter-btn' onClick={this.sourceSiteFilter.bind(this, 'indeed')}>Indeed</Button>
-          </div>
+          </div> */}
           {userListings === true &&
-            <div>
+            <div className={classes.deleteAllDiv}>
               <Button raised color='secondary' onClick={this.deleteAllListings}>Delete All Listings</Button>
             </div>
           }

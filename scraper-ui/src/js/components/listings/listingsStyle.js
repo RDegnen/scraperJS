@@ -18,6 +18,10 @@ const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
+  deleteAllDiv: {
+    right: 0,
+    position: 'absolute',
+  }
 });
 
 export default styles;
