@@ -6,7 +6,6 @@ import Grid from 'material-ui/Grid';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import Input, { InputLabel }from 'material-ui/Input';
-import Typography from 'material-ui/Typography';
 import { FormControl } from 'material-ui/Form';
 import styles from './listingsStyle';
 
@@ -56,6 +55,8 @@ class JobListings extends Component {
       if (err.status === 401) {
         this.props.setAuthorized(false);
       }
+      this.props.setError(err.status, err.statusText);
+      this.props.newError();
     });
   }
 
