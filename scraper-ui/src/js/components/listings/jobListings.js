@@ -145,7 +145,7 @@ class JobListings extends Component {
       <div>
         <Toolbar>
           <FormControl>
-            <InputLabel htmlFor="jobTitleSearch">Search</InputLabel>
+            <InputLabel htmlFor="jobTitleSearch">Search Title</InputLabel>
             <Input id='jobTitleSearch' onChange={this.inputFilter}/>
           </FormControl>
           {/* Not sure I want site filters, they don't really make sense

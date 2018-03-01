@@ -78,7 +78,7 @@ class Scraper extends Component {
                          InputProps={{ classes: { root: classes.scraperFormInput,
                                                   inkbar: classes.inkbarOverride,
                                                   underline: classes.underlineOverride } }}
-                         label='Location' value={this.state.location}
+                         label='City' value={this.state.location}
                          onChange={this.setLocation}/>
               <TextField labelClassName={classes.scraperFormInput}
                          InputProps={{ classes: { root: classes.scraperFormInput,
@@ -90,10 +90,10 @@ class Scraper extends Component {
                          InputProps={{ classes: { root: classes.scraperFormInput,
                                                   inkbar: classes.inkbarOverride,
                                                   underline: classes.underlineOverride } }}
-                         label='Pages' value={this.state.pages}
+                         label='# of Pages' value={this.state.pages}
                          onChange={this.setPages}/>
               <div className={classes.scrapeDiv}>
-                <Button raised disabled={disabled} className={buttonClass} type="submit" value="Submit">Scrape!</Button>
+                <Button raised disabled={disabled} className={buttonClass} type="submit" value="Submit">Find Jobs!</Button>
               </div>
             </form>
           </div>

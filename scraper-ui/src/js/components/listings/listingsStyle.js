@@ -21,7 +21,10 @@ const styles = theme => ({
   deleteAllDiv: {
     right: 0,
     position: 'absolute',
-  }
+  },
+  listingCardInfo: {
+    padding: '5px 0',
+  },
 });
 
 export default styles;

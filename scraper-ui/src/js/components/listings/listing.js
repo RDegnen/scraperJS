@@ -9,21 +9,22 @@ import Delete from 'material-ui-icons/Delete';
 import styles from './listingsStyle';
 
 function Listing(props) {
-  const { classes } = props;
+  const { classes, listing } = props;
   return (
     <Grid item xs={12} sm={12} md={6}>
       <Card>
         <CardContent className={classes.cardContent}>
-          <Typography align='left' type='title'>{props.listing.jobTitle.S}</Typography>
-          <Typography align='left' type='subheading'>{props.listing.sourceSite.S}</Typography>
+          <Typography align='left' type='title'>{listing.jobTitle.S}</Typography>
+          <Typography align='left' type='subheading' className={classes.listingCardInfo}>Location: {listing.location.S}</Typography>
+          <Typography align='left' type='subheading' className={classes.listingCardInfo}>Source: {listing.sourceSite.S}</Typography>
           <CardActions>
-            <Button raised href={props.listing.link.S} size='small' color='primary'>
+            <Button raised href={listing.link.S} size='small' color='primary'>
               Link
             </Button>
             {props.isUserListing === true &&
               <Button size='small'
                       onClick={props.deleteItem}
-                      value={`${props.listing.listingId.S},${props.listing.listingDate.S},${props.index}`}>
+                      value={`${listing.listingId.S},${listing.listingDate.S},${props.index}`}>
                 <Delete className={classes.rightIcon} />
               </Button>
             }
