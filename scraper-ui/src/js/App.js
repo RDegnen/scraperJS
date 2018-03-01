@@ -116,8 +116,8 @@ class App extends Component {
               <Grid item xs={12} sm={8} md={10} className={classes.paper}>
                 <Switch>
                   <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
-                  <this.PrivateRoute path='/job-listings' component={JobListings} userListings={false} redirectTo='/login'/>
-                  <this.PrivateRoute path='/user-listings' component={JobListings} userListings={true} redirectTo='/login'/>
+                  <this.PrivateRoute path='/job-listings' component={JobListings} userListings={false} setAuthorized={this.setAuthorized} redirectTo='/login'/>
+                  <this.PrivateRoute path='/user-listings' component={JobListings} userListings={true} setAuthorized={this.setAuthorized} redirectTo='/login'/>
                 </Switch>
               </Grid>
             </Grid>

@@ -39,13 +39,24 @@ class JobListings extends Component {
         authtoken: authToken,
       },
     })
-    .then(res => res.json())
+    .then((res) => {
+      if (res.status !== 200) {
+        return Promise.reject(res);
+      } else {
+        return res.json();
+      }
+    })
     .then((data) => {
       this.setState({ jobListings: data.Items })
       this.setState({ filteredListings: data.Items })
       this.setState({ currentInputFilter: data.Items })
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      if (err.status === 401) {
+        this.props.setAuthorized(false);
+      }
+    });
   }
 
   deleteJobListing(e) {
