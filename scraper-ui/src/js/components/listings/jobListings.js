@@ -52,11 +52,7 @@ class JobListings extends Component {
     })
     .catch((err) => {
       console.log(err);
-      if (err.status === 401) {
-        this.props.setAuthorized(false);
-      }
-      this.props.setError(err.status, err.statusText);
-      this.props.newError();
+      this.props.handleFetchError(err.status, err.statusText);
     });
   }
 

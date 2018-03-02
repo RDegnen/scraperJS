@@ -50,6 +50,7 @@ class App extends Component {
     this.closeErrorModal = this.closeErrorModal.bind(this);
     this.openErrorModal = this.openErrorModal.bind(this);
     this.setErrorObject = this.setErrorObject.bind(this);
+    this.handleFetchError = this.handleFetchError.bind(this);
   }
 
   setAuthorized(val) {
@@ -69,6 +70,14 @@ class App extends Component {
 
   openErrorModal() {
     this.setState({ errorModalOpen: true });
+  }
+
+  handleFetchError(status, message) {
+    if (status === 401) {
+      this.setAuthorized(false);
+    }
+    this.setErrorObject(status, message);
+    this.openErrorModal();
   }
 
   PrivateRoute({ component, redirectTo, ...rest }) {
@@ -146,10 +155,10 @@ class App extends Component {
                   <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
                   <this.PrivateRoute path='/job-listings' component={JobListings}
                     userListings={false} setAuthorized={this.setAuthorized}
-                    newError={this.openErrorModal} setError={this.setErrorObject} redirectTo='/login'/>
+                    handleFetchError={this.handleFetchError} redirectTo='/login'/>
                   <this.PrivateRoute path='/user-listings' component={JobListings}
                     userListings={true} setAuthorized={this.setAuthorized}
-                    newError={this.openErrorModal} setError={this.setErrorObject} redirectTo='/login'/>
+                    handleFetchError={this.handleFetchError} redirectTo='/login'/>
                 </Switch>
               </Grid>
             </Grid>
