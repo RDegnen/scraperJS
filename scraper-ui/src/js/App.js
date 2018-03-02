@@ -6,6 +6,7 @@ import Logout from './components/auth/logout';
 import Authorize from './components/auth/auth';
 import JobListings from './components/listings/jobListings';
 import Scraper from './components/scraper/scraper';
+import ErrorModal from './components/errors/errorModal';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
@@ -34,14 +35,49 @@ const PropsRoute = ({ component, ...rest }) => {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { isAuthorized: this.checkAuthorized() };
+    this.state = {
+      isAuthorized: this.checkAuthorized(),
+      errorObject: {
+        status: '',
+        message: '',
+      },
+      errorModalOpen: false,
+    };
     this.setAuthorized = this.setAuthorized.bind(this);
     this.checkAuthorized = this.checkAuthorized.bind(this);
     this.PrivateRoute = this.PrivateRoute.bind(this);
+
+    this.closeErrorModal = this.closeErrorModal.bind(this);
+    this.openErrorModal = this.openErrorModal.bind(this);
+    this.setErrorObject = this.setErrorObject.bind(this);
+    this.handleFetchError = this.handleFetchError.bind(this);
   }
 
   setAuthorized(val) {
     this.setState({ isAuthorized: val });
+  }
+
+  setErrorObject(status, message) {
+    this.setState({ errorObject: {
+      status: status,
+      message: message,
+    }})
+  }
+
+  closeErrorModal() {
+    this.setState({ errorModalOpen: false });
+  }
+
+  openErrorModal() {
+    this.setState({ errorModalOpen: true });
+  }
+
+  handleFetchError(status, message) {
+    if (status === 401) {
+      this.setAuthorized(false);
+    }
+    this.setErrorObject(status, message);
+    this.openErrorModal();
   }
 
   PrivateRoute({ component, redirectTo, ...rest }) {
@@ -94,7 +130,7 @@ class App extends Component {
                   <Typography type='headline' className={classes.navGrey}>ScraperJS</Typography>
                       {isAuthorized ? (
                         <div>
-                          <Scraper />
+                          <Scraper handleFetchError={this.handleFetchError}/>
                           <div className={classes.navLinkDiv}>
                             <Typography type='title' className={classes.navGrey}>View Listings</Typography>
                             <Button size='small' activeClassName={classes.navLink}
@@ -109,15 +145,20 @@ class App extends Component {
                           <Logout setAuthorized={this.setAuthorized}/>
                         </div>
                       ) : (
-                        <Login />
+                        <Login handleFetchError={this.handleFetchError}/>
                       )}
                 </div>
               </Grid>
               <Grid item xs={12} sm={8} md={10} className={classes.paper}>
+              <ErrorModal error={this.state.errorObject} open={this.state.errorModalOpen} handleClose={this.closeErrorModal}/>
                 <Switch>
-                  <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
-                  <this.PrivateRoute path='/job-listings' component={JobListings} userListings={false} redirectTo='/login'/>
-                  <this.PrivateRoute path='/user-listings' component={JobListings} userListings={true} redirectTo='/login'/>
+                  <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized} handleFetchError={this.handleFetchError}/>
+                  <this.PrivateRoute path='/job-listings' component={JobListings}
+                    userListings={false} setAuthorized={this.setAuthorized}
+                    handleFetchError={this.handleFetchError} redirectTo='/login'/>
+                  <this.PrivateRoute path='/user-listings' component={JobListings}
+                    userListings={true} setAuthorized={this.setAuthorized}
+                    handleFetchError={this.handleFetchError} redirectTo='/login'/>
                 </Switch>
               </Grid>
             </Grid>

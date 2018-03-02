@@ -6,9 +6,9 @@ import Grid from 'material-ui/Grid';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import Input, { InputLabel }from 'material-ui/Input';
-import Typography from 'material-ui/Typography';
 import { FormControl } from 'material-ui/Form';
 import styles from './listingsStyle';
+import { checkResponseStatus } from '../../utils/helpers';
 
 const api = process.env.REACT_APP_NODE_API;
 
@@ -39,13 +39,16 @@ class JobListings extends Component {
         authtoken: authToken,
       },
     })
-    .then(res => res.json())
+    .then(res => checkResponseStatus(res, true))
     .then((data) => {
       this.setState({ jobListings: data.Items })
       this.setState({ filteredListings: data.Items })
       this.setState({ currentInputFilter: data.Items })
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      this.props.handleFetchError(err.status, err.statusText);
+    });
   }
 
   deleteJobListing(e) {
@@ -66,7 +69,7 @@ class JobListings extends Component {
       },
     })
     .then((res) => {
-      console.log(res);
+      checkResponseStatus(res);
       // get the index of listing in the jobListings array when deleting from filteredListings
       const index = this.state.jobListings.map(i => i.listingId.S).indexOf(params[0])
       // Check if a site filter or input filter is active and remove from those
@@ -76,7 +79,10 @@ class JobListings extends Component {
 
       this.setState({ jobListings: this.state.jobListings  });
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      this.props.handleFetchError(err.status, err.statusText);
+    });
   }
 
   deleteAllListings(e) {
@@ -89,11 +95,14 @@ class JobListings extends Component {
       },
     })
     .then((res) => {
-      console.log(res)
+      checkResponseStatus(res);
       this.setState({ jobListings: [] });
       this.setState({ filteredListings: [] });
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      this.props.handleFetchError(err.status, err.statusText);
+    });
   }
   // Determine to get the job listings scraped by the user or all the listings from all users.
   componentWillMount() {
