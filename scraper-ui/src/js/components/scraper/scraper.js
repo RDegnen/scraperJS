@@ -58,8 +58,11 @@ class Scraper extends Component {
     })
     .then(res => checkResponseStatus(res, true))
     .then((resp) => {
-      console.log(resp);
-      window.location.assign('/user-listings');
+      if (resp === 0) {
+        this.props.handleFetchError(200, 'No jobs found :-( Please search again.')
+      } else {
+        window.location.assign('/user-listings');
+      }
     })
     .catch((err) => {
       console.log(err);

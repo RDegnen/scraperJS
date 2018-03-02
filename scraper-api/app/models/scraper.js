@@ -105,6 +105,7 @@ const scrapeAll = (req, data) => {
 
 const writeListings = (listings) => {
   return new Promise((resolve, reject) => {
+    const listingsLength = listings.length;
     // Splice the listings array otherwise Dynamo will error
     // for more than 25 items written per batch.
     const RequestItems = {};
@@ -115,7 +116,7 @@ const writeListings = (listings) => {
         if (err) reject(err);
       });
     }
-    resolve('Listings successfully written to Dynamo');
+    resolve(listingsLength);
   });
 };
 
