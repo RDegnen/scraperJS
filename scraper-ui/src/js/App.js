@@ -130,7 +130,7 @@ class App extends Component {
                   <Typography type='headline' className={classes.navGrey}>ScraperJS</Typography>
                       {isAuthorized ? (
                         <div>
-                          <Scraper />
+                          <Scraper handleFetchError={this.handleFetchError}/>
                           <div className={classes.navLinkDiv}>
                             <Typography type='title' className={classes.navGrey}>View Listings</Typography>
                             <Button size='small' activeClassName={classes.navLink}
@@ -145,14 +145,14 @@ class App extends Component {
                           <Logout setAuthorized={this.setAuthorized}/>
                         </div>
                       ) : (
-                        <Login />
+                        <Login handleFetchError={this.handleFetchError}/>
                       )}
                 </div>
               </Grid>
               <Grid item xs={12} sm={8} md={10} className={classes.paper}>
               <ErrorModal error={this.state.errorObject} open={this.state.errorModalOpen} handleClose={this.closeErrorModal}/>
                 <Switch>
-                  <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized}/>
+                  <PropsRoute path='/auth' component={Authorize} setAuthorized={this.setAuthorized} handleFetchError={this.handleFetchError}/>
                   <this.PrivateRoute path='/job-listings' component={JobListings}
                     userListings={false} setAuthorized={this.setAuthorized}
                     handleFetchError={this.handleFetchError} redirectTo='/login'/>

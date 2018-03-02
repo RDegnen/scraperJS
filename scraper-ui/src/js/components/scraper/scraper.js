@@ -4,6 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import styles from './scraperStyle';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
+import { checkResponseStatus } from '../../utils/helpers';
 
 const api = process.env.REACT_APP_NODE_API;
 
@@ -55,12 +56,15 @@ class Scraper extends Component {
         'Content-Type': 'application/json',
       },
     })
-    .then(res => res.json())
+    .then(res => checkResponseStatus(res, true))
     .then((resp) => {
       console.log(resp);
       window.location.assign('/user-listings');
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      this.props.handleFetchError(err.status, err.statusText);
+    });
   }
 
   render() {

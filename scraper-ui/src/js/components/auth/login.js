@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
+import { checkResponseStatus } from '../../utils/helpers';
 
 const api = process.env.REACT_APP_NODE_API;
 
@@ -9,11 +10,14 @@ class Login extends Component {
       method: 'GET',
       mode: 'cors',
     })
-    .then(res => res.json())
+    .then(res => checkResponseStatus(res, true))
     .then((authUrl) => {
       window.location.assign(authUrl);
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      this.props.handleFetchError(err.status, err.statusText);
+    });
   }
 
   render() {

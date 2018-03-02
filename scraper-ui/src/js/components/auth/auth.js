@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { checkResponseStatus } from '../../utils/helpers';
 
 const api = process.env.REACT_APP_NODE_API;
 
@@ -15,13 +16,16 @@ class Authorize extends Component {
       },
       body: JSON.stringify(data),
     })
-    .then(res => res.json())
+    .then(res => checkResponseStatus(res, true))
     .then((data) => {
       localStorage.setItem('authToken', data.authToken);
       this.props.setAuthorized(true);
       window.location.assign('/job-listings');
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err)
+      this.props.handleFetchError(err.status, err.statusText);
+    });
   }
   componentDidMount() {
     this.authorizeGithub(this.props.location.search)
