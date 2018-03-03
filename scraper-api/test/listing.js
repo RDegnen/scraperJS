@@ -38,6 +38,20 @@ function getIndeedHtml() {
   });
 }
 
+function getStackOverflowHtml() {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: 'ross-storage-bucket',
+      Key: 'stackoverflow.html',
+    };
+    s3.getObject(params, (err, data) => {
+      if (err) reject(err);
+      const htmlString = data.Body.toString();
+      resolve(htmlString);
+    });
+  });
+}
+
 describe('Listing actions', () => {
   const userData = {
     id: '12345679123456',
@@ -62,7 +76,7 @@ describe('Listing actions', () => {
       })
       .catch(err => console.log(err));
 
-    Promise.all([getCraigslistHtml(), getIndeedHtml()])
+    Promise.all([getCraigslistHtml(), getIndeedHtml(), getStackOverflowHtml()])
       .then(data => Scraper.scrapeAll(req, data))
       .then(data => Scraper.writeListings(data))
       .then((resp) => {
@@ -81,7 +95,7 @@ describe('Listing actions', () => {
           .then((res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.Items.should.have.lengthOf(91);
+            res.body.Items.should.have.lengthOf(116);
             resolve();
           })
           .catch(err => reject(err));
@@ -111,7 +125,7 @@ describe('Listing actions', () => {
     it('should get all indeed listings', () => {
       return new Promise((resolve, reject) => {
         chai.request(app)
-          .get('/listings/indeed')
+          .get('/listings/Indeed')
           .set('authtoken', process.env.TEST_TOKEN_2)
           .then((res) => {
             res.should.have.status(200);
@@ -133,7 +147,7 @@ describe('Listing actions', () => {
           .then((res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.Items.should.have.lengthOf(91);
+            res.body.Items.should.have.lengthOf(116);
             resolve();
           })
           .catch(err => reject(err));

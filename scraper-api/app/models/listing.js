@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB();
 const config = require('config');
+/* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
 
 const getMultipleListings = req =>
   new Promise((resolve, reject) => {
@@ -10,7 +11,7 @@ const getMultipleListings = req =>
       params = {
         TableName: config.JOB_LISTINGS_TABLE,
       };
-    } else if (source === 'craigslist' || source === 'indeed') {
+    } else if (source === 'Craigslist' || source === 'Indeed') {
       params = {
         TableName: config.JOB_LISTINGS_TABLE,
         ExpressionAttributeValues: {

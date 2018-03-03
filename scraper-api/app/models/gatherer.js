@@ -1,5 +1,7 @@
 const rp = require('request-promise');
 
+/* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
+
 const fetchProxies = () =>
   // fetch proxy list, unpack ip, port, and return a random proxy
   new Promise((resolve, reject) => {
@@ -58,8 +60,31 @@ const collectIndeedHtml = (req, proxy) =>
       .catch(err => reject(err));
   });
 
+const collectStackOverflowHtml = (req, proxy) =>
+  new Promise((resolve, reject) => {
+    let { location } = req.body;
+    if (location.split(' ').length > 1) location = location.split(' ').join('+');
+
+    const urls = [];
+    const terms = req.body.terms.map(t => t.split(' ').join('+'));
+    // Same as Indeed
+    if (req.body.pages < 1) req.body.pages = 1;
+    for (let i = 0; i < terms.length; i++) {
+      for (let p = 0; p < req.body.pages; p++) {
+        let url;
+        if (p === 0) url = `https://stackoverflow.com/jobs?sort=i&q=${terms[i]}&l=${location}&d=20&u=Miles`;
+        else url = `https://stackoverflow.com/jobs?sort=i&q=${terms[i]}&l=${location}&d=20&u=Miles&sort=i&pg=${i}`;
+        urls.push(rp({ url, proxy }));
+      }
+    }
+    Promise.all(urls)
+      .then(resp => resolve(resp))
+      .catch(err => reject(err));
+  });
+
 module.exports = {
   fetchProxies,
   collectCraigslistHtml,
   collectIndeedHtml,
+  collectStackOverflowHtml,
 };

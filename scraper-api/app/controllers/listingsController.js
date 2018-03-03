@@ -23,7 +23,8 @@ const userIndex = (req, res, next) => {
 const create = (req, res, next) => {
   Gatherer.fetchProxies()
     .then(proxy => Promise.all([Gatherer.collectCraigslistHtml(req, proxy),
-      Gatherer.collectIndeedHtml(req, proxy)]))
+      Gatherer.collectIndeedHtml(req, proxy),
+      Gatherer.collectStackOverflowHtml(req, proxy)]))
     .then(data => Scraper.scrapeAll(req, data))
     .then(data => Scraper.writeListings(data))
     .then(resp => res.json(resp))
