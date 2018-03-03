@@ -83,7 +83,7 @@ const scrapeStackOverflow = (req, data, location) =>
               Item: {
                 jobTitle: { S: $(elem).find('a').attr('title') },
                 link: { S: `https://stackoverflow.com/${href}` },
-                listingId: { S: `${$(elem).attr('data-jobid')}#${req.currentUser.userId.N}` },
+                listingId: { S: `s${$(elem).attr('data-jobid')}#${req.currentUser.userId.N}` },
                 sourceSite: { S: 'StackOverflow' },
                 listingDate: { S: 'NA' },
                 location: { S: location },
