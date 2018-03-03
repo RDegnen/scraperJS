@@ -164,7 +164,7 @@ describe('Listing actions', () => {
     it('should delete all listings', () => {
       return new Promise((resolve, reject) => {
         chai.request(app)
-          .delete('/listings/destroy/all')
+          .delete('/listings/destroy/bulk')
           .set('authtoken', process.env.TEST_TOKEN_2)
           .then((res) => {
             res.should.have.status(200);

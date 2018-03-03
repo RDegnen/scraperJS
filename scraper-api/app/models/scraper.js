@@ -4,8 +4,8 @@ const config = require('config');
 
 const dynamodb = new AWS.DynamoDB();
 
-const scrapeCraigslist = (req, data, location) => {
-  return new Promise((resolve, reject) => {
+const scrapeCraigslist = (req, data, location) =>
+  new Promise((resolve, reject) => {
     const listings = [];
     for (let i = 0; i < data.length; i++) {
       const $ = cheerio.load(data[i]);
@@ -45,10 +45,9 @@ const scrapeCraigslist = (req, data, location) => {
     }
     resolve(listings);
   });
-};
 
-const scrapeIndeed = (req, data, location) => {
-  return new Promise((resolve, reject) => {
+const scrapeIndeed = (req, data, location) =>
+  new Promise((resolve, reject) => {
     // const items = data.Items;
     const listings = [];
     for (let i = 0; i < data.length; i++) {
@@ -89,10 +88,9 @@ const scrapeIndeed = (req, data, location) => {
     }
     resolve(listings);
   });
-};
 
-const scrapeAll = (req, data) => {
-  return new Promise((resolve, reject) => {
+const scrapeAll = (req, data) =>
+  new Promise((resolve, reject) => {
     const flatData = [].concat(...data);
     const { location } = req.body;
     Promise.all([scrapeCraigslist(req, flatData, location), scrapeIndeed(req, flatData, location)])
@@ -101,10 +99,9 @@ const scrapeAll = (req, data) => {
       })
       .catch(err => reject(err));
   });
-};
 
-const writeListings = (listings) => {
-  return new Promise((resolve, reject) => {
+const writeListings = listings =>
+  new Promise((resolve, reject) => {
     const listingsLength = listings.length;
     // Splice the listings array otherwise Dynamo will error
     // for more than 25 items written per batch.
@@ -118,7 +115,6 @@ const writeListings = (listings) => {
     }
     resolve(listingsLength);
   });
-};
 
 module.exports = {
   scrapeCraigslist,

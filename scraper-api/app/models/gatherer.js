@@ -1,8 +1,8 @@
 const rp = require('request-promise');
 
-const fetchProxies = () => {
+const fetchProxies = () =>
   // fetch proxy list, unpack ip, port, and return a random proxy
-  return new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => {
     const proxyApiKey = process.env.PROXY_API_KEY;
     const options = {
       url: `https://api.myprivateproxy.net/v1/fetchProxies/json/full/${proxyApiKey}`,
@@ -18,11 +18,9 @@ const fetchProxies = () => {
       })
       .catch(err => reject(err));
   });
-};
 
-const collectCraigslistHtml = (req, proxy) => {
-  return new Promise((resolve, reject) => {
-
+const collectCraigslistHtml = (req, proxy) =>
+  new Promise((resolve, reject) => {
     let { location } = req.body;
     location = location.split(' ').join('');
 
@@ -36,11 +34,9 @@ const collectCraigslistHtml = (req, proxy) => {
       .then(resp => resolve(resp))
       .catch(err => reject(err));
   });
-};
 
-const collectIndeedHtml = (req, proxy) => {
-  return new Promise((resolve, reject) => {
-
+const collectIndeedHtml = (req, proxy) =>
+  new Promise((resolve, reject) => {
     let { location } = req.body;
     if (location.split(' ').length > 1) location = location.split(' ').join('+');
 
@@ -61,7 +57,6 @@ const collectIndeedHtml = (req, proxy) => {
       .then(resp => resolve(resp))
       .catch(err => reject(err));
   });
-};
 
 module.exports = {
   fetchProxies,

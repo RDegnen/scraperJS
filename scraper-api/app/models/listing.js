@@ -2,8 +2,8 @@ const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB();
 const config = require('config');
 
-const getMultipleListings = (req) => {
-  return new Promise((resolve, reject) => {
+const getMultipleListings = req =>
+  new Promise((resolve, reject) => {
     const { source } = req.params;
     let params;
     if (source === 'all') {
@@ -26,10 +26,9 @@ const getMultipleListings = (req) => {
       resolve(data);
     });
   });
-};
 
-const getListing = (req) => {
-  return new Promise((resolve, reject) => {
+const getListing = req =>
+  new Promise((resolve, reject) => {
     const params = {
       Key: {
         listingId: {
@@ -43,10 +42,9 @@ const getListing = (req) => {
       resolve(data);
     });
   });
-};
 
-const getUserListings = (req) => {
-  return new Promise((resolve, reject) => {
+const getUserListings = req =>
+  new Promise((resolve, reject) => {
     const userId = req.currentUser.userId.N;
     const params = {
       TableName: config.JOB_LISTINGS_TABLE,
@@ -63,10 +61,9 @@ const getUserListings = (req) => {
       resolve(data);
     });
   });
-};
 
-const destroyListing = (req) => {
-  return new Promise((resolve, reject) => {
+const destroyListing = req =>
+  new Promise((resolve, reject) => {
     const params = {
       Key: {
         listingId: {
@@ -83,10 +80,9 @@ const destroyListing = (req) => {
       resolve(data);
     });
   });
-};
 
-const destroyListings = (listings) => {
-  return new Promise((resolve, reject) => {
+const destroyListings = listings =>
+  new Promise((resolve, reject) => {
     // Put items in proper format for request
     const itemsToDelete = [];
     for (let i = 0; i < listings.Items.length; i++) {
@@ -117,7 +113,6 @@ const destroyListings = (listings) => {
     }
     resolve('Listings successfully deleted from Dynamo');
   });
-};
 
 module.exports = {
   getMultipleListings,

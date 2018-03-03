@@ -3,8 +3,8 @@ const dynamodb = new AWS.DynamoDB();
 const config = require('config');
 const request = require('request');
 
-const createUser = (userData, authToken) => {
-  return new Promise((resolve, reject) => {
+const createUser = (userData, authToken) =>
+  new Promise((resolve, reject) => {
     const params = {
       Item: {
         userId: {
@@ -24,10 +24,9 @@ const createUser = (userData, authToken) => {
       resolve(data);
     });
   });
-};
 
-const getUser = (userData) => {
-  return new Promise((resolve, reject) => {
+const getUser = userData =>
+  new Promise((resolve, reject) => {
     const params = {
       Key: {
         userId: {
@@ -41,10 +40,9 @@ const getUser = (userData) => {
       resolve(data);
     });
   });
-};
 
-const updateToken = (userData, authToken) => {
-  return new Promise((resolve, reject) => {
+const updateToken = (userData, authToken) =>
+  new Promise((resolve, reject) => {
     const params = {
       Key: {
         userId: {
@@ -68,11 +66,10 @@ const updateToken = (userData, authToken) => {
       resolve(data);
     });
   });
-};
 
-const destroyToken = (currentUser, githubConfig, authToken) => {
+const destroyToken = (currentUser, githubConfig, authToken) =>
   // Revoke the authToken from github and then remove it from dynamo
-  return new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => {
     const authBuff = Buffer.from(`${githubConfig.client_id}:${githubConfig.secret}`).toString('base64');
     request.delete({
       url: `https://api.github.com/applications/${githubConfig.client_id}/tokens/${authToken}`,
@@ -88,11 +85,10 @@ const destroyToken = (currentUser, githubConfig, authToken) => {
       .then(data => resolve(data))
       .catch(err => reject(err));
   });
-};
 
-const destroyUser = (currentUser) => {
+const destroyUser = currentUser =>
   // This function is only being used for tests right now
-  return new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => {
     const params = {
       Key: {
         userId: {
@@ -106,7 +102,6 @@ const destroyUser = (currentUser) => {
       resolve('User deleted', data);
     });
   });
-};
 
 module.exports = {
   createUser,
